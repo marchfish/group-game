@@ -1,0 +1,5 @@
+F:\myWork\Native.Csharp.Frame-Final\Native.Csharp.Sdk\bin\x86\Debug\Native.Csharp.Sdk.dll
+F:\myWork\Native.Csharp.Frame-Final\Native.Csharp.Sdk\bin\x86\Debug\Native.Csharp.Sdk.pdb
+F:\myWork\Native.Csharp.Frame-Final\Native.Csharp.Sdk\obj\x86\Debug\Native.Csharp.Sdk.csproj.CoreCompileInputs.cache
+F:\myWork\Native.Csharp.Frame-Final\Native.Csharp.Sdk\obj\x86\Debug\Native.Csharp.Sdk.dll
+F:\myWork\Native.Csharp.Frame-Final\Native.Csharp.Sdk\obj\x86\Debug\Native.Csharp.Sdk.pdb
