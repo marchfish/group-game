@@ -780,6 +780,11 @@ namespace Native.Csharp.Sdk.Cqp
 
 			return Convert.ToBase64String (binary.ToArray ());
 		}
-		#endregion
-	}
+
+        public void SendGroupMessage(object fromGroup, string v)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+    }
 }

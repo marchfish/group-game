@@ -5,14 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Native.Csharp.App.EventArgs;
 using Native.Csharp.App.Interface;
+using Native.Csharp.App.Manages;
 
 namespace Native.Csharp.App.Event
 {
     class Event_GroupMessage : IReceiveGroupMessage
     {
+        Facade facade = new Facade();
+
         public void ReceiveGroupMessage(object sender, CqGroupMessageEventArgs e)
         {
-            Common.CqApi.SendGroupMessage(e.FromGroup, e.Message);
+            BaseManage baseManage;
+            if (facade.managesDit.TryGetValue(e.Message, out baseManage)) {
+                baseManage.Request(sender, e);
+                return;
+            }
         }
     }
 }

@@ -57,8 +57,8 @@ namespace Native.Csharp.App.Core
 		{
 			// 请勿随意修改
 			// 
-			Common.AppName = "酷Q样例应用 for C#1";
-			Common.AppVersion = Version.Parse ("1.0.1");		
+			Common.AppName = "群游戏";
+			Common.AppVersion = Version.Parse ("1.0.0");		
 
 			//
 			// 当前项目名称: com.guangyingart.demo
