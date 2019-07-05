@@ -158,6 +158,7 @@
     <Compile Include="App\Manages\KnapsackManage.cs" />
     <Compile Include="App\Manages\RegisterManage.cs" />
     <Compile Include="App\Tools\IniTool.cs" />
+    <Compile Include="App\Tools\MidirTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repair\Core\Kernel32.cs" />
     <Compile Include="Repair\Enum\LoadLibraryFlags.cs" />
