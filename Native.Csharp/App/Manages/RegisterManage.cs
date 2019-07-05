@@ -9,10 +9,7 @@ namespace Native.Csharp.App.Manages
 {
     class RegisterManage : BaseManage
     {
-        public RegisterManage (){
-            action = "注册管理";
-            AddManage();
-        }
+        public RegisterManage() : base("注册管理") { }
 
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {

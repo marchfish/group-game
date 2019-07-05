@@ -9,11 +9,7 @@ namespace Native.Csharp.App.Manages
 {
     class KnapsackManage : BaseManage
     {
-        public KnapsackManage()
-        {
-            action = "背包管理";
-            AddManage();
-        }
+        public KnapsackManage() : base("背包管理") { }
 
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {

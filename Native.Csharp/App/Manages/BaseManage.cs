@@ -12,6 +12,11 @@ namespace Native.Csharp.App.Manages
         protected String action = "base";
         protected Facade facade = Facade.facade;
 
+        protected BaseManage(string name)
+        {
+            action = name;
+            AddManage();
+        }
         public abstract void Request(object sender, CqGroupMessageEventArgs e);
         
         protected void AddManage() {
