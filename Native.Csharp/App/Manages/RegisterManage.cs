@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Native.Csharp.App.Configs;
 
 namespace Native.Csharp.App.Manages
 {
     class RegisterManage : BaseManage
     {
+        private string iniName = "用户信息.ini";
+
         public RegisterManage (){
             action = "注册用户";
             AddManage();
@@ -17,6 +20,7 @@ namespace Native.Csharp.App.Manages
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {
             string[] arr = e.Message.Split(' ');
+            string groupPath = devPath + "\\" + e.FromGroup;
 
             if (arr.Length < 2)
             {
@@ -25,13 +29,27 @@ namespace Native.Csharp.App.Manages
             }
 
             // 读取ini
-            iniTool.IniReadValue(devPath, "ini文件名", e.Message, "内容");
+            string userID =  iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), "角色名");
 
-            // 写入ini
-            iniTool.WriteInt(devPath + "\\" + e.FromGroup, "要写入的文件名.ini", "section名", "节点名", 1);
+            if (userID != "")
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "您已经注册了用户：" + userID);
+                return;
+            }
+
+            for (int i=0; i< GameConfig.userInfo.Length; i++ )
+            {
+                if(i == 0){
+                    // 写入ini
+                    iniTool.IniWriteValue(groupPath, iniName, e.FromQQ.ToString(), "角色名", arr[1]);
+                    continue ;
+                }
+
+                iniTool.IniWriteValue(groupPath, iniName, e.FromQQ.ToString(), GameConfig.userInfo[i], GameConfig.userInfoDefault[i]);
+            }
 
             // 发送消息(响应)
-            Common.CqApi.SendGroupMessage(e.FromGroup, "功能暂未开发...");
+            Common.CqApi.SendGroupMessage(e.FromGroup, arr[1] +  " 注册成功，开始冒险吧！");
         }
     }
 }

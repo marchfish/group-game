@@ -25,10 +25,12 @@ namespace Native.Csharp.App.Manages
         {
             facade = this;
 
-            // 注册管理
+            // 注册用户
             RegisterManage registerManage = new RegisterManage();
-            // 背包管理
+            // 背包
             KnapsackManage knapsackManage = new KnapsackManage();
+            // 用户信息
+            UserInfo userInfo = new UserInfo();
 
         }
 
