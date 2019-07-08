@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Native.Csharp.App.Manages
 {
-    class UserInfo : BaseManage
+    class UserInfoManage : BaseManage
     {
         private string iniName = "用户信息.ini";
 
-        public UserInfo()
+        public UserInfoManage()
         {
             action = "角色信息";
             AddManage();

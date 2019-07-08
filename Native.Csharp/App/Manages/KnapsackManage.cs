@@ -9,18 +9,41 @@ namespace Native.Csharp.App.Manages
 {
     class KnapsackManage : BaseManage
     {
+        private string iniName = "背包信息.ini";
+
         public KnapsackManage()
         {
-            action = "背包管理";
+            action = "背包";
             AddManage();
+            eventManage.registerUser += AddUserKnapsack;
         }
 
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {
-            // TODO
+            string groupPath = devPath + "\\" + e.FromGroup;
 
-            // 发送消息(响应)
-            Common.CqApi.SendGroupMessage(e.FromGroup, action + "响应：" + e.Name);
+            if (isUser(e.FromQQ.ToString(), e.FromGroup.ToString()))
+            {
+                string userKnapsack = "";
+
+                List<string> items = iniTool.IniReadSectionKey(groupPath, iniName, e.FromQQ.ToString());
+
+                foreach (string item in items)
+                {
+                    userKnapsack += item + "：" + iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), item) + Environment.NewLine;
+                }
+
+                userKnapsack = userKnapsack.Substring(0, userKnapsack.Length - Environment.NewLine.Length);
+
+                Common.CqApi.SendGroupMessage(e.FromGroup, userKnapsack);
+                return;
+            }
+        }
+
+        public void AddUserKnapsack(string userId, string groupId) {
+            string groupPath = devPath + "\\" + groupId;
+            iniTool.IniWriteValue(groupPath, iniName, userId, "金币", "5000");
+            iniTool.IniWriteValue(groupPath, iniName, userId, "木棍", "1");
         }
     }
 }
