@@ -22,18 +22,25 @@ namespace Native.Csharp.App.Manages
         {
             string groupPath = devPath + "\\" + e.FromGroup;
 
-            if (isUser(e.FromQQ.ToString(), e.FromGroup.ToString()))
+            string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
+
+            if (userName != "")
             {
-                string userKnapsack = "";
+                string userKnapsack = "[" + userName + "]" + Environment.NewLine;
 
                 List<string> items = iniTool.IniReadSectionKey(groupPath, iniName, e.FromQQ.ToString());
 
                 foreach (string item in items)
                 {
-                    userKnapsack += item + "：" + iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), item) + Environment.NewLine;
+                    string res = iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), item);
+
+                    if (res != "")
+                    {
+                        userKnapsack += item + "：" + res + Environment.NewLine;
+                    }
                 }
 
-                userKnapsack = userKnapsack.Substring(0, userKnapsack.Length - Environment.NewLine.Length);
+                userKnapsack = SubRN(userKnapsack);
 
                 Common.CqApi.SendGroupMessage(e.FromGroup, userKnapsack);
                 return;

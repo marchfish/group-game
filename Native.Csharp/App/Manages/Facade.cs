@@ -36,6 +36,10 @@ namespace Native.Csharp.App.Manages
             UserInfoManage userInfoManage = new UserInfoManage();
             // 装备信息
             EquipManage equipManage = new EquipManage();
+            // 地图管理
+            MapManage mapManage = new MapManage();
+            // 攻击
+            AttackManage attackManage = new AttackManage();
         }
 
         public void AddManage(String manageName, BaseManage manage)
