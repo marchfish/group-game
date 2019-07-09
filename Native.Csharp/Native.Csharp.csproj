@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App\Common.cs" />
+    <Compile Include="App\Configs\GameConfig.cs" />
     <Compile Include="App\Core\LibExport.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -153,11 +154,18 @@
     <Compile Include="App\Interface\IReceiveGroupMessage.cs" />
     <Compile Include="App\Interface\IReceiveGroupPrivateMessage.cs" />
     <Compile Include="App\Interface\IReceiveOnlineStatusMessage.cs" />
+    <Compile Include="App\Manages\AttackManage.cs" />
     <Compile Include="App\Manages\BaseManage.cs" />
+    <Compile Include="App\Manages\EquipManage.cs" />
+    <Compile Include="App\Manages\EventManage.cs" />
     <Compile Include="App\Manages\Facade.cs" />
     <Compile Include="App\Manages\KnapsackManage.cs" />
+    <Compile Include="App\Manages\MapManage.cs" />
     <Compile Include="App\Manages\RegisterManage.cs" />
+    <Compile Include="App\Manages\UserInfoManage.cs" />
+    <Compile Include="App\Models\User.cs" />
     <Compile Include="App\Tools\IniTool.cs" />
+    <Compile Include="App\Tools\MidirTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repair\Core\Kernel32.cs" />
     <Compile Include="Repair\Enum\LoadLibraryFlags.cs" />

@@ -15,3 +15,12 @@ F:\myWork\Group-Game\group-game\Native.Csharp\obj\x86\Debug\com.guangyingart.dem
 C:\Users\Administrator\Desktop\cpq\dev\com.guangyingart.demo.json
 C:\Users\Administrator\Desktop\cpq\dev\com.guangyingart.demo.dll
 C:\Users\Administrator\Desktop\cpq\dev\com.guangyingart.demo.pdb
+C:\Users\Admin\Desktop\cpq\dev\com.guangyingart.demo.json
+C:\Users\Admin\Desktop\cpq\dev\com.guangyingart.demo.dll
+C:\Users\Admin\Desktop\cpq\dev\com.guangyingart.demo.pdb
+D:\GroupGame\group-game\Native.Csharp\obj\x86\Debug\Native.Csharp.csprojResolveAssemblyReference.cache
+D:\GroupGame\group-game\Native.Csharp\obj\x86\Debug\Native.Csharp.csproj.CoreCompileInputs.cache
+D:\GroupGame\group-game\Native.Csharp\obj\x86\Debug\com.guangyingart.demo.dll
+D:\GroupGame\group-game\Native.Csharp\obj\x86\Debug\com.guangyingart.demo.pdb
+E:\Projects\group-game\Native.Csharp\obj\x86\Debug\com.guangyingart.demo.dll
+E:\Projects\group-game\Native.Csharp\obj\x86\Debug\com.guangyingart.demo.pdb

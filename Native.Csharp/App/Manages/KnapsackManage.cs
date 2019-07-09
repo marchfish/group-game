@@ -9,14 +9,46 @@ namespace Native.Csharp.App.Manages
 {
     class KnapsackManage : BaseManage
     {
-        public KnapsackManage() : base("背包管理") { }
+        private string iniName = "背包信息.ini";
+
+        public KnapsackManage()
+        {
+            eventManage.registerUser += AddUserKnapsack;
+        }
 
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {
-            // TODO
+            string groupPath = devPath + "\\" + e.FromGroup;
 
-            // 发送消息(响应)
-            Common.CqApi.SendGroupMessage(e.FromGroup, action + "响应：" + e.Name);
+            string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
+
+            if (userName != "")
+            {
+                string userKnapsack = "[" + userName + "]" + Environment.NewLine;
+
+                List<string> items = iniTool.IniReadSectionKey(groupPath, iniName, e.FromQQ.ToString());
+
+                foreach (string item in items)
+                {
+                    string res = iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), item);
+
+                    if (res != "")
+                    {
+                        userKnapsack += item + "：" + res + Environment.NewLine;
+                    }
+                }
+
+                userKnapsack = SubRN(userKnapsack);
+
+                Common.CqApi.SendGroupMessage(e.FromGroup, userKnapsack);
+                return;
+            }
+        }
+
+        public void AddUserKnapsack(string userId, string groupId) {
+            string groupPath = devPath + "\\" + groupId;
+            iniTool.IniWriteValue(groupPath, iniName, userId, "金币", "5000");
+            iniTool.IniWriteValue(groupPath, iniName, userId, "木棍", "1");
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tools;
 
 namespace Native.Csharp.App.Manages
 {
@@ -10,19 +11,29 @@ namespace Native.Csharp.App.Manages
     {
         public static Facade facade;
 
-        public Dictionary<string, BaseManage> managesDit = new Dictionary<string, BaseManage>();
+        // 应用路径
+        public static string devPath = System.Windows.Forms.Application.StartupPath + "\\dev\\com.guangyingart.demo";
+
+        public readonly Dictionary<string, BaseManage> managesDit = new Dictionary<string, BaseManage>();
+
+        // 工具
+        public IniTool iniTool = new IniTool();
+        public MidirTool midirTool = new MidirTool();
+
+        // 委托管理
+        public EventManage eventManage = new EventManage(); 
 
         // 初始化类
         public Facade()
         {
             facade = this;
 
-            // 注册管理
-            RegisterManage registerManage = new RegisterManage();
-            // 背包管理
-            KnapsackManage knapsackManage = new KnapsackManage();
-
-
+            managesDit.Add("注册用户", new RegisterManage());
+            managesDit.Add("背包", new KnapsackManage());
+            managesDit.Add("角色信息", new UserInfoManage());
+            managesDit.Add("装备", new EquipManage());
+            managesDit.Add("当前位置", new MapManage());
+            managesDit.Add("攻击", new AttackManage());
         }
 
         public void AddManage(String manageName, BaseManage manage)
