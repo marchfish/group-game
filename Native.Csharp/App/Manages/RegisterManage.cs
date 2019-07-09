@@ -14,7 +14,7 @@ namespace Native.Csharp.App.Manages
 
         public RegisterManage (){
             action = "注册用户";
-            AddManage();
+            AddManage();    
         }
 
         public override void Request(object sender, CqGroupMessageEventArgs e)

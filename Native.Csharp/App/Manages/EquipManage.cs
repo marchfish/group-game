@@ -23,19 +23,35 @@ namespace Native.Csharp.App.Manages
         {
             string groupPath = devPath + "\\" + e.FromGroup;
 
-            if (isUser(e.FromQQ.ToString(), e.FromGroup.ToString()))
+            string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
+
+            if (userName != "")
             {
                 string[] arr = e.Message.Split(' ');
 
                 if (arr.Length > 1)
                 {
-                    iniTool.IniWriteValue(groupPath, iniName, e.FromQQ.ToString(), "武器", arr[1]);
-                    Common.CqApi.SendGroupMessage(e.FromGroup, "装备成功");
+                    if (arr[1] == "金币") {
+                        Common.CqApi.SendGroupMessage(e.FromGroup, "金币无法装备");
+                        return;
+                    }
+
+                    string item = iniTool.IniReadValue(groupPath, "背包信息.ini", e.FromQQ.ToString(), arr[1]);
+
+                    if (item != "")
+                    {
+                        iniTool.IniWriteValue(groupPath, iniName, e.FromQQ.ToString(), "武器", arr[1]);
+                        iniTool.IniWriteValue(groupPath, "背包信息.ini", e.FromQQ.ToString(), arr[1], "");
+                        Common.CqApi.SendGroupMessage(e.FromGroup, "装备成功");
+                    }
+                    else {
+                        Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您没有该物品");
+                    }
+
                     return;
                 }
 
-
-                string equip = "";
+                string equip = "[" + userName + "]" + Environment.NewLine;
 
                 foreach (string userEquip in GameConfig.equip)
                 {
@@ -48,11 +64,6 @@ namespace Native.Csharp.App.Manages
                 return;
             }
         }
-
-        //private void Equip()
-        //{
-
-        //}
 
         public void AddUserEquip(string userId, string groupId)
         {
