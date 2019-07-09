@@ -1,5 +1,7 @@
-﻿using Native.Csharp.App.Manages;
+﻿using System;
+using Native.Csharp.App.Manages;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Tools
@@ -42,6 +44,10 @@ namespace Tools
             string lpString,
             string lpFileName
             );
+
+        [DllImport("kernel32", EntryPoint = "GetPrivateProfileString")]
+        private static extern uint GetPrivateProfileStringA(string section, string key,
+            string def, Byte[] retVal, int size, string filePath);
 
         /// <summary>
         /// 构造函数
@@ -185,6 +191,27 @@ namespace Tools
             GetPrivateProfileString(section, name, "", strSb, 256, filePath + "\\" + iniName);
             return strSb.ToString();
         }
+
+        /// <summary>
+        /// 读取指定 节-键 
+        /// </summary>
+        /// <param name="section"></param>
+        /// <returns></returns>
+        public List<string> IniReadSectionKey(string filePath, string iniName, string section)
+        {
+            List<string> result = new List<string>();
+            Byte[] buf = new Byte[65536];
+            uint len = GetPrivateProfileStringA(section, null, null, buf, buf.Length, filePath + "\\" + iniName);
+            int j = 0;
+            for (int i = 0; i < len; i++)
+                if (buf[i] == 0)
+                {
+                    result.Add(Encoding.Default.GetString(buf, j, i - j));
+                    j = i + 1;
+                }
+            return result;
+        }
+
 
         /// <summary>
         /// 写入指定值，如果不存在 节-键，则会自动创建

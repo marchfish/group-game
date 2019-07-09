@@ -155,10 +155,12 @@
     <Compile Include="App\Interface\IReceiveGroupPrivateMessage.cs" />
     <Compile Include="App\Interface\IReceiveOnlineStatusMessage.cs" />
     <Compile Include="App\Manages\BaseManage.cs" />
+    <Compile Include="App\Manages\EquipManage.cs" />
+    <Compile Include="App\Manages\EventManage.cs" />
     <Compile Include="App\Manages\Facade.cs" />
     <Compile Include="App\Manages\KnapsackManage.cs" />
     <Compile Include="App\Manages\RegisterManage.cs" />
-    <Compile Include="App\Manages\UserInfo.cs" />
+    <Compile Include="App\Manages\UserInfoManage.cs" />
     <Compile Include="App\Tools\IniTool.cs" />
     <Compile Include="App\Tools\MidirTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

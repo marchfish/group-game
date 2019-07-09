@@ -20,6 +20,9 @@ namespace Native.Csharp.App.Manages
         public IniTool iniTool = new IniTool();
         public MidirTool midirTool = new MidirTool();
 
+        // 委托管理
+        public EventManage eventManage = new EventManage(); 
+
         // 初始化类
         public Facade()
         {
@@ -27,11 +30,12 @@ namespace Native.Csharp.App.Manages
 
             // 注册用户
             RegisterManage registerManage = new RegisterManage();
-            // 背包
+            // 背包信息
             KnapsackManage knapsackManage = new KnapsackManage();
             // 用户信息
-            UserInfo userInfo = new UserInfo();
-
+            UserInfoManage userInfoManage = new UserInfoManage();
+            // 装备信息
+            EquipManage equipManage = new EquipManage();
         }
 
         public void AddManage(String manageName, BaseManage manage)

@@ -14,11 +14,25 @@ namespace Native.Csharp.App.Manages
         protected Facade facade = Facade.facade;
         protected IniTool iniTool = Facade.facade.iniTool;
         protected string devPath = Facade.devPath;
+        protected EventManage eventManage = Facade.facade.eventManage;
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e);
         
         protected void AddManage() {
             facade.AddManage(action, this);
+        }
+
+        protected bool isUser(string userId, string groupId) {
+
+            string userName = iniTool.IniReadValue(devPath +"\\" + groupId, "用户信息.ini", userId, "角色名");
+
+            if (userName != null ) {
+
+                return true;
+
+            }
+
+            return false;
         }
     }
 }
