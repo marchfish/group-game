@@ -12,12 +12,6 @@ namespace Native.Csharp.App.Manages
     {
         private string iniName = "用户信息.ini";
 
-        public UserInfoManage()
-        {
-            action = "角色信息";
-            AddManage();
-        }
-
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {
             string groupPath = devPath + "\\" + e.FromGroup;

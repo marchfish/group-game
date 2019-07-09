@@ -13,16 +13,11 @@ namespace Native.Csharp.App.Manages
     abstract class BaseManage
     {
         protected String action = "base";
-        protected Facade facade = Facade.facade;
         protected IniTool iniTool = Facade.facade.iniTool;
         protected string devPath = Facade.devPath;
         protected EventManage eventManage = Facade.facade.eventManage;
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e);
-        
-        protected void AddManage() {
-            facade.AddManage(action, this);
-        }
 
         // 判断是否是用户获取用户名
         protected string GetUserName(string userId, string groupId) {

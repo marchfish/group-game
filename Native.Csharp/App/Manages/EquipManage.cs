@@ -14,8 +14,6 @@ namespace Native.Csharp.App.Manages
 
         public EquipManage()
         {
-            action = "装备";
-            AddManage();
             eventManage.registerUser += AddUserEquip;
         }
 

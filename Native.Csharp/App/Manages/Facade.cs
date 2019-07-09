@@ -14,7 +14,7 @@ namespace Native.Csharp.App.Manages
         // 应用路径
         public static string devPath = System.Windows.Forms.Application.StartupPath + "\\dev\\com.guangyingart.demo";
 
-        public Dictionary<string, BaseManage> managesDit = new Dictionary<string, BaseManage>();
+        public readonly Dictionary<string, BaseManage> managesDit = new Dictionary<string, BaseManage>();
 
         // 工具
         public IniTool iniTool = new IniTool();
@@ -28,18 +28,12 @@ namespace Native.Csharp.App.Manages
         {
             facade = this;
 
-            // 注册用户
-            RegisterManage registerManage = new RegisterManage();
-            // 背包信息
-            KnapsackManage knapsackManage = new KnapsackManage();
-            // 用户信息
-            UserInfoManage userInfoManage = new UserInfoManage();
-            // 装备信息
-            EquipManage equipManage = new EquipManage();
-            // 地图管理
-            MapManage mapManage = new MapManage();
-            // 攻击
-            AttackManage attackManage = new AttackManage();
+            managesDit.Add("注册用户", new RegisterManage());
+            managesDit.Add("背包", new KnapsackManage());
+            managesDit.Add("角色信息", new UserInfoManage());
+            managesDit.Add("装备", new EquipManage());
+            managesDit.Add("当前位置", new MapManage());
+            managesDit.Add("攻击", new AttackManage());
         }
 
         public void AddManage(String manageName, BaseManage manage)

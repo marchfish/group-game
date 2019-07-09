@@ -12,11 +12,6 @@ namespace Native.Csharp.App.Manages
     {
         private string iniName = "用户信息.ini";
 
-        public RegisterManage (){
-            action = "注册用户";
-            AddManage();    
-        }
-
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {
             string[] arr = e.Message.Split(' ');

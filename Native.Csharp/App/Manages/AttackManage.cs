@@ -10,12 +10,6 @@ namespace Native.Csharp.App.Manages
 {
     class AttackManage : BaseManage
     {
-        public AttackManage()
-        {
-            action = "攻击";
-            AddManage();
-        }
-
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {
             string groupPath = devPath + "\\" + e.FromGroup;

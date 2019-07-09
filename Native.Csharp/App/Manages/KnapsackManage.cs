@@ -13,8 +13,6 @@ namespace Native.Csharp.App.Manages
 
         public KnapsackManage()
         {
-            action = "背包";
-            AddManage();
             eventManage.registerUser += AddUserKnapsack;
         }
 

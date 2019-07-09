@@ -11,12 +11,6 @@ namespace Native.Csharp.App.Manages
     {
         private string iniName = "地图配置.ini";
 
-        public MapManage()
-        {
-            action = "当前位置";
-            AddManage();
-        }
-
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {
 

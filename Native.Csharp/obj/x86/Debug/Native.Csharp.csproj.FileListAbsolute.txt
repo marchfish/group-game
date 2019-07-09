@@ -22,3 +22,5 @@ D:\GroupGame\group-game\Native.Csharp\obj\x86\Debug\Native.Csharp.csprojResolveA
 D:\GroupGame\group-game\Native.Csharp\obj\x86\Debug\Native.Csharp.csproj.CoreCompileInputs.cache
 D:\GroupGame\group-game\Native.Csharp\obj\x86\Debug\com.guangyingart.demo.dll
 D:\GroupGame\group-game\Native.Csharp\obj\x86\Debug\com.guangyingart.demo.pdb
+E:\Projects\group-game\Native.Csharp\obj\x86\Debug\com.guangyingart.demo.dll
+E:\Projects\group-game\Native.Csharp\obj\x86\Debug\com.guangyingart.demo.pdb
