@@ -3,15 +3,15 @@
    public class User
    {
         public string Name { get; set; }
-        public string HP { get; set; }
-        public string MP { get; set; }
-        public string Agg { get; set; }
+        public int HP { get; set; }
+        public int MP { get; set; }
+        public int Agg { get; set; }
         public string Magic { get; set; }
         public string Crit { get; set; }
         public string Dodge { get; set; }
-        public string Defense { get; set; }
-        public string Level { get; set; }
-        public string Exp { get; set; }
+        public int Defense { get; set; }
+        public int Level { get; set; }
+        public int Exp { get; set; }
         public string Fame { get; set; }
         public string Pos { get; set; }
 
@@ -19,15 +19,15 @@
         {
             string[] arr = userInfo.Split(',');
             this.Name = arr[0];
-            this.HP = arr[1];
-            this.MP = arr[2];
-            this.Agg = arr[3];
+            this.HP = int.Parse(arr[1]);
+            this.MP = int.Parse(arr[2]);
+            this.Agg = int.Parse(arr[3]);
             this.Magic = arr[4];
             this.Crit = arr[5];
             this.Dodge = arr[6];
-            this.Defense = arr[7];
-            this.Level = arr[8];
-            this.Exp = arr[9];
+            this.Defense = int.Parse(arr[7]);
+            this.Level = int.Parse(arr[8]);
+            this.Exp = int.Parse(arr[9]);
             this.Fame = arr[10];
             this.Pos = arr[11];
         }

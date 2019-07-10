@@ -10,8 +10,6 @@ namespace Native.Csharp.App.Manages
 {
     class EquipManage : BaseManage
     {
-        private string iniName = "装备信息.ini";
-
         public EquipManage()
         {
             eventManage.registerUser += AddUserEquip;
@@ -34,12 +32,12 @@ namespace Native.Csharp.App.Manages
                         return;
                     }
 
-                    string item = iniTool.IniReadValue(groupPath, "背包信息.ini", e.FromQQ.ToString(), arr[1]);
+                    string item = iniTool.IniReadValue(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1]);
 
                     if (item != "")
                     {
-                        iniTool.IniWriteValue(groupPath, iniName, e.FromQQ.ToString(), "武器", arr[1]);
-                        iniTool.IniWriteValue(groupPath, "背包信息.ini", e.FromQQ.ToString(), arr[1], "");
+                        iniTool.IniWriteValue(groupPath, equipIni, e.FromQQ.ToString(), "武器", arr[1]);
+                        iniTool.IniWriteValue(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1], "");
                         Common.CqApi.SendGroupMessage(e.FromGroup, "装备成功");
                     }
                     else {
@@ -53,7 +51,7 @@ namespace Native.Csharp.App.Manages
 
                 foreach (string userEquip in GameConfig.equip)
                 {
-                    equip += userEquip + "：" + iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), userEquip) + Environment.NewLine;
+                    equip += userEquip + "：" + iniTool.IniReadValue(groupPath, equipIni, e.FromQQ.ToString(), userEquip) + Environment.NewLine;
                 }
 
                 equip = equip.Substring(0, equip.Length - Environment.NewLine.Length);
@@ -69,7 +67,7 @@ namespace Native.Csharp.App.Manages
 
             for (int i = 0; i < GameConfig.equip.Length; i++)
             {
-                iniTool.IniWriteValue(groupPath, iniName, userId, GameConfig.equip[i], GameConfig.equipDefault[i]);
+                iniTool.IniWriteValue(groupPath, equipIni, userId, GameConfig.equip[i], GameConfig.equipDefault[i]);
             }
         }
     }
