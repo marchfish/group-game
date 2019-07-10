@@ -9,11 +9,8 @@ namespace Native.Csharp.App.Manages
 {
     class MapManage : BaseManage
     {
-        private string iniName = "地图配置.ini";
-
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {
-
             string groupPath = devPath + "\\" + e.FromGroup;
 
             string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
@@ -24,7 +21,7 @@ namespace Native.Csharp.App.Manages
 
                 if (e.Message == "上" || e.Message == "下" || e.Message == "左" || e.Message == "右")
                 {
-                    string nextPos = iniTool.IniReadValue(devPath, iniName, position, e.Message);
+                    string nextPos = iniTool.IniReadValue(devPath, mapIni, position, e.Message);
                     if (nextPos != "")
                     {
                         iniTool.IniWriteValue(groupPath, "用户信息.ini", e.FromQQ.ToString(), "当前位置", nextPos);
@@ -47,13 +44,13 @@ namespace Native.Csharp.App.Manages
 
             string map = "";
 
-            List<string> items = iniTool.IniReadSectionKey(devPath, iniName, position);
+            List<string> items = iniTool.IniReadSectionKey(devPath, mapIni, position);
 
             map += "[" + position + "]" + Environment.NewLine;
 
             foreach (string item in items)
             {
-                string res = iniTool.IniReadValue(devPath, iniName, position, item);
+                string res = iniTool.IniReadValue(devPath, mapIni, position, item);
 
                 if (res != "")
                 {

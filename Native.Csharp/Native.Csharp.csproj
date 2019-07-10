@@ -163,6 +163,7 @@
     <Compile Include="App\Manages\MapManage.cs" />
     <Compile Include="App\Manages\RegisterManage.cs" />
     <Compile Include="App\Manages\UserInfoManage.cs" />
+    <Compile Include="App\Models\Enemy.cs" />
     <Compile Include="App\Models\User.cs" />
     <Compile Include="App\Tools\IniTool.cs" />
     <Compile Include="App\Tools\MidirTool.cs" />

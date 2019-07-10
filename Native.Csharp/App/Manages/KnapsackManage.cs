@@ -9,8 +9,6 @@ namespace Native.Csharp.App.Manages
 {
     class KnapsackManage : BaseManage
     {
-        private string iniName = "背包信息.ini";
-
         public KnapsackManage()
         {
             eventManage.registerUser += AddUserKnapsack;
@@ -26,11 +24,11 @@ namespace Native.Csharp.App.Manages
             {
                 string userKnapsack = "[" + userName + "]" + Environment.NewLine;
 
-                List<string> items = iniTool.IniReadSectionKey(groupPath, iniName, e.FromQQ.ToString());
+                List<string> items = iniTool.IniReadSectionKey(groupPath, KnapsackIni, e.FromQQ.ToString());
 
                 foreach (string item in items)
                 {
-                    string res = iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), item);
+                    string res = iniTool.IniReadValue(groupPath, KnapsackIni, e.FromQQ.ToString(), item);
 
                     if (res != "")
                     {
@@ -47,8 +45,8 @@ namespace Native.Csharp.App.Manages
 
         public void AddUserKnapsack(string userId, string groupId) {
             string groupPath = devPath + "\\" + groupId;
-            iniTool.IniWriteValue(groupPath, iniName, userId, "金币", "5000");
-            iniTool.IniWriteValue(groupPath, iniName, userId, "木棍", "1");
+            iniTool.IniWriteValue(groupPath, KnapsackIni, userId, "金币", "5000");
+            iniTool.IniWriteValue(groupPath, KnapsackIni, userId, "木棍", "1");
         }
     }
 }

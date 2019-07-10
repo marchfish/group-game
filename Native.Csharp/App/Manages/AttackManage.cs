@@ -22,33 +22,100 @@ namespace Native.Csharp.App.Manages
 
                 if (arr.Length > 1)
                 {
-                    //return;
+                    if (Int32.TryParse(arr[1], out int num))
+                    {
+                        Attack(groupPath, e, num);
+                    }
+
+                    return;
                 }
 
-                Attack(groupPath, userName, e);
+                Attack(groupPath, e);
 
                 return;
             }
         }
 
-        private void Attack(string groupPath, string userName, CqGroupMessageEventArgs e) {
-
+        private void Attack(string groupPath, CqGroupMessageEventArgs e, int num = 0) {
+          
             User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
 
-            string pos = iniTool.IniReadValue(groupPath, "战斗配置.ini", e.FromQQ.ToString(), "当前位置");
+            string pos = iniTool.IniReadValue(groupPath, fightIni, e.FromQQ.ToString(), "当前位置");
 
-            if ( !pos.Equals(user.Pos) ) {
-                iniTool.IniWriteValue(groupPath, "战斗配置.ini", e.FromQQ.ToString(), "角色名", user.Name);
-                iniTool.IniWriteValue(groupPath, "战斗配置.ini", e.FromQQ.ToString(), "角色血量", user.HP);
-                iniTool.IniWriteValue(groupPath, "战斗配置.ini", e.FromQQ.ToString(), "角色蓝量", user.MP);
-                iniTool.IniWriteValue(groupPath, "战斗配置.ini", e.FromQQ.ToString(), "怪物", "野猪");
-                iniTool.IniWriteValue(groupPath, "战斗配置.ini", e.FromQQ.ToString(), "怪物血量", "30");
-                iniTool.IniWriteValue(groupPath, "战斗配置.ini", e.FromQQ.ToString(), "当前位置", user.Pos);
+            string enemyName = iniTool.IniReadValue(devPath, mapIni, user.Pos, "怪物");
+
+            if (enemyName == "")
+            {
+                return ;
             }
 
-            Common.CqApi.SendGroupMessage(e.FromGroup, user.Name + "攻击了野猪，野猪 HP-10" );
+            Enemy enemy = GetEnemy(enemyName);
 
-            user = null;
+            if ( pos.Equals(user.Pos) ) {
+                string enemyHP = iniTool.IniReadValue(groupPath, fightIni, e.FromQQ.ToString(), "怪物血量");
+                enemy.HP = int.Parse(enemyHP);
+            }
+           
+            string res = "";
+
+            if (Fight(user, enemy, e, res))
+            {
+                return ;
+            };
+
+            AddFight(user, enemy, e.FromQQ.ToString(), e.FromGroup.ToString());
+
+            Common.CqApi.SendGroupMessage(e.FromGroup, res);
+  
+        }
+
+        private bool Fight(User user, Enemy enemy, CqGroupMessageEventArgs e, string res) {
+
+            int enemyhurt = user.Agg - enemy.Defense;
+
+            if (enemyhurt > 0)
+            {
+                enemy.HP -= enemyhurt;
+
+                if (enemy.HP <= 0)
+                {
+                    res += enemy.Name + "被：" + user.Name + "击败了!";
+                    iniTool.DeleteSection(devPath + "\\" + e.FromGroup.ToString(), fightIni, e.FromQQ.ToString());
+                    Common.CqApi.SendGroupMessage(e.FromGroup, res);
+                    return true;
+                }
+              
+                res += user.Name + " 攻击 " + enemy.Name + "，" + enemy.Name + "的血量 -" + enemyhurt + "剩余：" + enemy.HP + Environment.NewLine;
+                
+
+            } else {
+                res += user.Name + " 攻击 " + enemy.Name + "，" + enemy.Name + "的血量 -" + enemyhurt + "剩余：" + enemy.HP + Environment.NewLine;
+            }
+
+            int userhurt = enemy.Agg - user.Defense;
+
+            if (userhurt > 0) {
+
+                user.HP -= userhurt;
+
+                if (user.HP <= 0)
+                {
+                    res += user.Name + "被：" + enemy.Name + "击败了!";
+                    iniTool.DeleteSection(devPath + "\\" + e.FromGroup.ToString(), fightIni, e.FromQQ.ToString());
+                    Common.CqApi.SendGroupMessage(e.FromGroup, res);
+                    return true;
+                }
+                
+                res += enemy.Name + " 攻击 " + user.Name + "，" + user.Name + "的血量 -" + userhurt + "剩余：" + user.HP;
+              
+
+            }
+            else
+            {
+                res += enemy.Name + " 攻击 " + user.Name + "，" + user.Name + "的血量 -" + userhurt + "剩余：" + user.HP;
+            }
+
+            return false;
         }
 
 

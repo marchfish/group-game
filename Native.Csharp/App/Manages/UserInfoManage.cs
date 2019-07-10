@@ -10,20 +10,18 @@ namespace Native.Csharp.App.Manages
 {
     class UserInfoManage : BaseManage
     {
-        private string iniName = "用户信息.ini";
-
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {
             string groupPath = devPath + "\\" + e.FromGroup;
 
-            string userID = iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), "角色名");
+            string userID = iniTool.IniReadValue(groupPath, userInfoIni, e.FromQQ.ToString(), "角色名");
 
             if (userID != "")
             {
                 string userInfo = "";
 
                 foreach (string user in GameConfig.userInfo) {
-                    userInfo += user + "：" +  iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), user) + Environment.NewLine;
+                    userInfo += user + "：" +  iniTool.IniReadValue(groupPath, userInfoIni, e.FromQQ.ToString(), user) + Environment.NewLine;
                 }
 
                 userInfo = userInfo.Substring(0, userInfo.Length - Environment.NewLine.Length);

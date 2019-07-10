@@ -154,13 +154,9 @@ namespace Tools
         /// 删除指定的 节
         /// </summary>
         /// <param name="section"></param>
-        public void DeleteSection(string section)
+        public void DeleteSection(string filePath, string iniName, string section)
         {
-            WritePrivateProfileString(section, null, null, this.m_FileName);
-        }
-        public void DeleteSection(string filePath, string section)
-        {
-            WritePrivateProfileString(section, null, null, filePath);
+            WritePrivateProfileString(section, null, null, filePath + '\\' + iniName);
         }
         /// <summary>
         /// 删除全部 节

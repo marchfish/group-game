@@ -10,8 +10,6 @@ namespace Native.Csharp.App.Manages
 {
     class RegisterManage : BaseManage
     {
-        private string iniName = "用户信息.ini";
-
         public override void Request(object sender, CqGroupMessageEventArgs e)
         {
             string[] arr = e.Message.Split(' ');
@@ -19,12 +17,12 @@ namespace Native.Csharp.App.Manages
 
             if (arr.Length < 2)
             {
-                Common.CqApi.SendGroupMessage(e.FromGroup, action + "请输入：注册用户 你的名字");
+                Common.CqApi.SendGroupMessage(e.FromGroup, "请输入：注册用户 你的名字");
                 return;
             }
 
             // 读取ini
-            string userID =  iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), "角色名");
+            string userID =  iniTool.IniReadValue(groupPath, userInfoIni, e.FromQQ.ToString(), "角色名");
 
             if (userID != "")
             {
@@ -36,11 +34,11 @@ namespace Native.Csharp.App.Manages
             {
                 if(i == 0){
                     // 写入ini
-                    iniTool.IniWriteValue(groupPath, iniName, e.FromQQ.ToString(), "角色名", arr[1]);
+                    iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "角色名", arr[1]);
                     continue ;
                 }
 
-                iniTool.IniWriteValue(groupPath, iniName, e.FromQQ.ToString(), GameConfig.userInfo[i], GameConfig.userInfoDefault[i]);
+                iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), GameConfig.userInfo[i], GameConfig.userInfoDefault[i]);
             }
 
             // 触发订阅
