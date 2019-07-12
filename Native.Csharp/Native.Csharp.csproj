@@ -161,6 +161,7 @@
     <Compile Include="App\Manages\Facade.cs" />
     <Compile Include="App\Manages\KnapsackManage.cs" />
     <Compile Include="App\Manages\MapManage.cs" />
+    <Compile Include="App\Manages\MissionManage.cs" />
     <Compile Include="App\Manages\RegisterManage.cs" />
     <Compile Include="App\Manages\UserInfoManage.cs" />
     <Compile Include="App\Models\Enemy.cs" />

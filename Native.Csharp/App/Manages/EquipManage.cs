@@ -21,44 +21,47 @@ namespace Native.Csharp.App.Manages
 
             string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
 
-            if (userName != "")
+            if (userName == "")
             {
-                string[] arr = e.Message.Split(' ');
+                return;
+            }
 
-                if (arr.Length > 1)
-                {
-                    if (arr[1] == "金币") {
-                        Common.CqApi.SendGroupMessage(e.FromGroup, "金币无法装备");
-                        return;
-                    }
+            string[] arr = e.Message.Split(' ');
 
-                    string item = iniTool.IniReadValue(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1]);
-
-                    if (item != "")
-                    {
-                        iniTool.IniWriteValue(groupPath, equipIni, e.FromQQ.ToString(), "武器", arr[1]);
-                        iniTool.IniWriteValue(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1], "");
-                        Common.CqApi.SendGroupMessage(e.FromGroup, "装备成功");
-                    }
-                    else {
-                        Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您没有该物品");
-                    }
-
+            if (arr.Length > 1)
+            {
+                if (arr[1] == "金币") {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "金币无法装备");
                     return;
                 }
 
-                string equip = "[" + userName + "]" + Environment.NewLine;
+                string item = iniTool.IniReadValue(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1]);
 
-                foreach (string userEquip in GameConfig.equip)
+                if (item != "")
                 {
-                    equip += userEquip + "：" + iniTool.IniReadValue(groupPath, equipIni, e.FromQQ.ToString(), userEquip) + Environment.NewLine;
+                    iniTool.IniWriteValue(groupPath, equipIni, e.FromQQ.ToString(), "武器", arr[1]);
+                    iniTool.IniWriteValue(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1], "");
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "装备成功");
+                }
+                else {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您没有该物品");
                 }
 
-                equip = equip.Substring(0, equip.Length - Environment.NewLine.Length);
-
-                Common.CqApi.SendGroupMessage(e.FromGroup, equip);
                 return;
             }
+
+            string equip = "[" + userName + "]" + Environment.NewLine;
+
+            foreach (string userEquip in GameConfig.equip)
+            {
+                equip += userEquip + "：" + iniTool.IniReadValue(groupPath, equipIni, e.FromQQ.ToString(), userEquip) + Environment.NewLine;
+            }
+
+            equip = equip.Substring(0, equip.Length - Environment.NewLine.Length);
+
+            Common.CqApi.SendGroupMessage(e.FromGroup, equip);
+            return;
+
         }
 
         public void AddUserEquip(string userId, string groupId)

@@ -34,6 +34,7 @@ namespace Native.Csharp.App.Manages
             managesDit.Add("装备", new EquipManage());
             managesDit.Add("当前位置", new MapManage());
             managesDit.Add("攻击", new AttackManage());
+            managesDit.Add("任务", new MissionManage());
         }
 
         public void AddManage(String manageName, BaseManage manage)

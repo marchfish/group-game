@@ -14,21 +14,23 @@ namespace Native.Csharp.App.Manages
         {
             string groupPath = devPath + "\\" + e.FromGroup;
 
-            string userID = iniTool.IniReadValue(groupPath, userInfoIni, e.FromQQ.ToString(), "角色名");
+            string userName = iniTool.IniReadValue(groupPath, userInfoIni, e.FromQQ.ToString(), "角色名");
 
-            if (userID != "")
+            if (userName == "")
             {
-                string userInfo = "";
-
-                foreach (string user in GameConfig.userInfo) {
-                    userInfo += user + "：" +  iniTool.IniReadValue(groupPath, userInfoIni, e.FromQQ.ToString(), user) + Environment.NewLine;
-                }
-
-                userInfo = userInfo.Substring(0, userInfo.Length - Environment.NewLine.Length);
-
-                Common.CqApi.SendGroupMessage(e.FromGroup, userInfo);
                 return;
             }
+ 
+            string userInfo = "";
+
+            foreach (string user in GameConfig.userInfo) {
+                userInfo += user + "：" +  iniTool.IniReadValue(groupPath, userInfoIni, e.FromQQ.ToString(), user) + Environment.NewLine;
+            }
+
+            userInfo = userInfo.Substring(0, userInfo.Length - Environment.NewLine.Length);
+
+            Common.CqApi.SendGroupMessage(e.FromGroup, userInfo);
+            return;
         }
     }
 }

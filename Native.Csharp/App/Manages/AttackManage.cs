@@ -16,28 +16,32 @@ namespace Native.Csharp.App.Manages
 
             string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
 
-            if (userName != "")
+            if (userName == "")
             {
-                string[] arr = e.Message.Split(' ');
+                return;
+            }
 
-                if (arr.Length > 1)
+            string[] arr = e.Message.Split(' ');
+
+            if (arr.Length > 1)
+            {
+                if (Int32.TryParse(arr[1], out int num))
                 {
-                    if (Int32.TryParse(arr[1], out int num))
-                    {
-                        Attack(groupPath, e, num);
-                    }
-
-                    return;
+                    Attack(groupPath, e, num);
                 }
-
-                Attack(groupPath, e);
 
                 return;
             }
+
+            Attack(groupPath, e);
+
+            return;
         }
 
         private void Attack(string groupPath, CqGroupMessageEventArgs e, int num = 0) {
-          
+
+            string res = "";
+
             User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
 
             string pos = iniTool.IniReadValue(groupPath, fightIni, e.FromQQ.ToString(), "当前位置");
@@ -55,10 +59,24 @@ namespace Native.Csharp.App.Manages
                 string enemyHP = iniTool.IniReadValue(groupPath, fightIni, e.FromQQ.ToString(), "怪物血量");
                 enemy.HP = int.Parse(enemyHP);
             }
-           
-            string res = "";
 
-            if (Fight(user, enemy, e, res))
+            if (num > 1)
+            {
+                for (int i = 0; i < num; i++)
+                {
+                    res = Fight(user, enemy, e);
+
+                    if (res == "")
+                    {
+                        return;
+                    };
+                }
+            }
+            else {
+                res = Fight(user, enemy, e);
+            }
+
+            if (res == "")
             {
                 return ;
             };
@@ -69,9 +87,11 @@ namespace Native.Csharp.App.Manages
   
         }
 
-        private bool Fight(User user, Enemy enemy, CqGroupMessageEventArgs e, string res) {
+        private string Fight(User user, Enemy enemy, CqGroupMessageEventArgs e) {
 
             int enemyhurt = user.Agg - enemy.Defense;
+
+            string res = "";
 
             if (enemyhurt > 0)
             {
@@ -79,17 +99,20 @@ namespace Native.Csharp.App.Manages
 
                 if (enemy.HP <= 0)
                 {
-                    res += enemy.Name + "被：" + user.Name + "击败了!";
+                    res += enemy.Name + " 被 " + user.Name + " 击败了!";
+
+                    res += Environment.NewLine + SetItem(enemy, e);
+
                     iniTool.DeleteSection(devPath + "\\" + e.FromGroup.ToString(), fightIni, e.FromQQ.ToString());
                     Common.CqApi.SendGroupMessage(e.FromGroup, res);
-                    return true;
+                    return "";
                 }
               
-                res += user.Name + " 攻击 " + enemy.Name + "，" + enemy.Name + "的血量 -" + enemyhurt + "剩余：" + enemy.HP + Environment.NewLine;
+                res += user.Name + " 攻击 " + enemy.Name + "，" + enemy.Name + "的血量 -" + enemyhurt + " 剩余：" + enemy.HP + Environment.NewLine;
                 
 
             } else {
-                res += user.Name + " 攻击 " + enemy.Name + "，" + enemy.Name + "的血量 -" + enemyhurt + "剩余：" + enemy.HP + Environment.NewLine;
+                res += user.Name + " 攻击 " + enemy.Name + "，" + enemy.Name + "的血量 -" + enemyhurt + " 剩余：" + enemy.HP + Environment.NewLine;
             }
 
             int userhurt = enemy.Agg - user.Defense;
@@ -100,24 +123,53 @@ namespace Native.Csharp.App.Manages
 
                 if (user.HP <= 0)
                 {
-                    res += user.Name + "被：" + enemy.Name + "击败了!";
+                    res += user.Name + " 被 " + enemy.Name + " 击败了!";
                     iniTool.DeleteSection(devPath + "\\" + e.FromGroup.ToString(), fightIni, e.FromQQ.ToString());
                     Common.CqApi.SendGroupMessage(e.FromGroup, res);
-                    return true;
+                    return "";
                 }
                 
-                res += enemy.Name + " 攻击 " + user.Name + "，" + user.Name + "的血量 -" + userhurt + "剩余：" + user.HP;
+                res += enemy.Name + " 攻击 " + user.Name + "，" + user.Name + "的血量 -" + userhurt + " 剩余：" + user.HP;
               
 
             }
             else
             {
-                res += enemy.Name + " 攻击 " + user.Name + "，" + user.Name + "的血量 -" + userhurt + "剩余：" + user.HP;
+                res += enemy.Name + " 攻击 " + user.Name + "，" + user.Name + "的血量 -" + userhurt + " 剩余：" + user.HP;
             }
 
-            return false;
+            return res;
         }
 
+        private string SetItem(Enemy enemy, CqGroupMessageEventArgs e) {
+            Random random = new Random();
+
+            int rNum = random.Next(0, 100);
+
+            if (rNum <= enemy.Probability)
+            {
+                string items = iniTool.IniReadValue(devPath, enemyIni, enemy.Name, "掉落物品");
+
+                int enemyCoin = iniTool.ReadInt(devPath, enemyIni, enemy.Name, "金币", 0);
+
+                string[] arr = items.Split('|');
+
+                rNum = random.Next(0, arr.Count());
+
+                arr = arr[rNum].Split('*');
+
+                int item = iniTool.ReadInt(devPath + "\\" + e.FromGroup.ToString(), KnapsackIni, e.FromQQ.ToString(), arr[0], 0);
+
+                int myCoin = iniTool.ReadInt(devPath + "\\" + e.FromGroup.ToString(), KnapsackIni, e.FromQQ.ToString(), "金币", 0);
+
+                iniTool.IniWriteValue(devPath + "\\" + e.FromGroup.ToString(), KnapsackIni, e.FromQQ.ToString(), "金币", (myCoin + enemyCoin).ToString());
+                iniTool.IniWriteValue(devPath + "\\" + e.FromGroup.ToString(), KnapsackIni, e.FromQQ.ToString(), arr[0], (int.Parse(arr[1]) + item).ToString());
+
+                return "获得：金币*" + enemyCoin.ToString() + ", " + arr[0] + "*" + arr[1];
+            }
+
+            return null;
+        }
 
     }
 }

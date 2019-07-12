@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tools;
-using Native.Csharp.App.EventArgs;
+﻿using Native.Csharp.App.EventArgs;
 using Native.Csharp.App.Interface;
 using Native.Csharp.App.Manages;
 
@@ -32,14 +26,17 @@ namespace Native.Csharp.App.Event
                 return;
             }
 
-            if (arr[0] == "上" || arr[0] == "下" || arr[0] == "左" || arr[0] == "右") {
+            string action = facade.iniTool.IniReadValue(Facade.devPath, "基础配置.ini", "路由", arr[0]);
 
-                if (facade.managesDit.TryGetValue("当前位置", out baseManage))
-                {
-                    baseManage.Request(sender, e);
-                    return;
-                }
+            if (action == "")
+            {
+                return;
+            }
 
+            if (facade.managesDit.TryGetValue(action, out baseManage))
+            {
+                baseManage.Request(sender, e);
+                return;
             }
 
         }
