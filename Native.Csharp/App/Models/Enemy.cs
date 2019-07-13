@@ -16,7 +16,8 @@ namespace Native.Csharp.App.Models
         public int Defense { get; set; }
         public string Attribute { get; set; }
         public int Coin { get; set; }
-        public string items { get; set; }
+        public string Items { get; set; }
+        public int Probability { get; set; }
         public int Exp { get; set; }
         public string Type { get; set; }
 
@@ -30,9 +31,10 @@ namespace Native.Csharp.App.Models
             this.Defense = int.Parse(arr[4]);
             this.Attribute = arr[5];
             this.Coin = int.Parse(arr[6]);
-            this.items = arr[7];
-            this.Exp = int.Parse(arr[8]);
-            this.Type = arr[9];
+            this.Items = arr[7];
+            this.Probability = int.Parse(arr[8]);
+            this.Exp = int.Parse(arr[9]);
+            this.Type = arr[10];
         }
     }
 }

@@ -19,3 +19,4 @@ E:\Projects\group-game\Native.Csharp.Sdk\obj\x86\Debug\Native.Csharp.Sdk.csprojA
 E:\Projects\group-game\Native.Csharp.Sdk\obj\x86\Debug\Native.Csharp.Sdk.csproj.CoreCompileInputs.cache
 E:\Projects\group-game\Native.Csharp.Sdk\obj\x86\Debug\Native.Csharp.Sdk.dll
 E:\Projects\group-game\Native.Csharp.Sdk\obj\x86\Debug\Native.Csharp.Sdk.pdb
+F:\myWork\Group-Game\group-game\Native.Csharp.Sdk\obj\x86\Debug\Native.Csharp.Sdk.csprojAssemblyReference.cache

@@ -20,27 +20,30 @@ namespace Native.Csharp.App.Manages
 
             string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
 
-            if (userName != "")
+            if (userName == "")
             {
-                string userKnapsack = "[" + userName + "]" + Environment.NewLine;
-
-                List<string> items = iniTool.IniReadSectionKey(groupPath, KnapsackIni, e.FromQQ.ToString());
-
-                foreach (string item in items)
-                {
-                    string res = iniTool.IniReadValue(groupPath, KnapsackIni, e.FromQQ.ToString(), item);
-
-                    if (res != "")
-                    {
-                        userKnapsack += item + "：" + res + Environment.NewLine;
-                    }
-                }
-
-                userKnapsack = SubRN(userKnapsack);
-
-                Common.CqApi.SendGroupMessage(e.FromGroup, userKnapsack);
                 return;
             }
+
+            string userKnapsack = "[" + userName + "]" + Environment.NewLine;
+
+            List<string> items = iniTool.IniReadSectionKey(groupPath, KnapsackIni, e.FromQQ.ToString());
+
+            foreach (string item in items)
+            {
+                string res = iniTool.IniReadValue(groupPath, KnapsackIni, e.FromQQ.ToString(), item);
+
+                if (res != "")
+                {
+                    userKnapsack += item + "：" + res + Environment.NewLine;
+                }
+            }
+
+            userKnapsack = SubRN(userKnapsack);
+
+            Common.CqApi.SendGroupMessage(e.FromGroup, userKnapsack);
+            return;
+            
         }
 
         public void AddUserKnapsack(string userId, string groupId) {

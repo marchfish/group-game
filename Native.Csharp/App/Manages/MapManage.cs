@@ -15,29 +15,31 @@ namespace Native.Csharp.App.Manages
 
             string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
 
-            if (userName != "")
+            if (userName == "")
             {
-                string position = iniTool.IniReadValue(groupPath, "用户信息.ini", e.FromQQ.ToString(), "当前位置");
-
-                if (e.Message == "上" || e.Message == "下" || e.Message == "左" || e.Message == "右")
-                {
-                    string nextPos = iniTool.IniReadValue(devPath, mapIni, position, e.Message);
-                    if (nextPos != "")
-                    {
-                        iniTool.IniWriteValue(groupPath, "用户信息.ini", e.FromQQ.ToString(), "当前位置", nextPos);
-
-                        GetMap(nextPos, e);
-                    }
-                    else {
-                        Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，前方无路可走。");
-                    }
-                    return;
-                }
-
-                GetMap(position, e);
-
                 return;
             }
+
+            string position = iniTool.IniReadValue(groupPath, "用户信息.ini", e.FromQQ.ToString(), "当前位置");
+
+            if (e.Message == "上" || e.Message == "下" || e.Message == "左" || e.Message == "右")
+            {
+                string nextPos = iniTool.IniReadValue(devPath, mapIni, position, e.Message);
+                if (nextPos != "")
+                {
+                    iniTool.IniWriteValue(groupPath, "用户信息.ini", e.FromQQ.ToString(), "当前位置", nextPos);
+
+                    GetMap(nextPos, e);
+                }
+                else {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，前方无路可走。");
+                }
+                return;
+            }
+
+            GetMap(position, e);
+
+            return;
         }
 
         public void GetMap(string position, CqGroupMessageEventArgs e) {
