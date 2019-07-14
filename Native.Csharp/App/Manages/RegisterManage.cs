@@ -10,10 +10,9 @@ namespace Native.Csharp.App.Manages
 {
     class RegisterManage : BaseManage
     {
-        public override void Request(object sender, CqGroupMessageEventArgs e)
+        public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
             string[] arr = e.Message.Split(' ');
-            string groupPath = devPath + "\\" + e.FromGroup;
 
             if (arr.Length < 2)
             {

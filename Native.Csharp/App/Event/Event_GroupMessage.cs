@@ -22,7 +22,7 @@ namespace Native.Csharp.App.Event
             BaseManage baseManage;
 
             if (facade.managesDit.TryGetValue(arr[0], out baseManage)) {
-                baseManage.Request(sender, e);
+                baseManage.Request(sender, e, Facade.devPath + "\\" + e.FromGroup);
                 return;
             }
 
@@ -35,7 +35,7 @@ namespace Native.Csharp.App.Event
 
             if (facade.managesDit.TryGetValue(action, out baseManage))
             {
-                baseManage.Request(sender, e);
+                baseManage.Request(sender, e, Facade.devPath + "\\" + e.FromGroup);
                 return;
             }
 

@@ -159,6 +159,14 @@ namespace Tools
             WritePrivateProfileString(section, null, null, filePath + '\\' + iniName);
         }
         /// <summary>
+        /// 删除指定的 节
+        /// </summary>
+        /// <param name="section"></param>
+        public void DeleteSectionKey(string filePath, string iniName, string section, string name)
+        {
+            WritePrivateProfileString(section, name, null, filePath + '\\' + iniName);
+        }
+        /// <summary>
         /// 删除全部 节
         /// </summary>
         public void DeleteAllSection()

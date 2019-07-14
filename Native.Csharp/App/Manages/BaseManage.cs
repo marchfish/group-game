@@ -2,10 +2,6 @@
 using Native.Csharp.App.EventArgs;
 using Native.Csharp.App.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tools;
 
 namespace Native.Csharp.App.Manages
@@ -21,12 +17,13 @@ namespace Native.Csharp.App.Manages
         protected string KnapsackIni = "背包信息.ini";
         protected string fightIni = "战斗信息.ini";
         protected string equipIni = "装备信息.ini";
+        protected string equipInfoIni = "装备配置.ini";
         protected string enemyIni = "怪物配置.ini";
         protected string mapIni = "地图配置.ini";
         protected string missionIni = "任务配置.ini";
         protected string missionHistoryIni = "任务信息.ini";
 
-        public abstract void Request(object sender, CqGroupMessageEventArgs e);
+        public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
         // 判断是否是用户获取用户名
         protected string GetUserName(string userId, string groupId) {
@@ -73,6 +70,25 @@ namespace Native.Csharp.App.Manages
             enemy.Add(enemyInfo);
 
             return enemy;
+        }
+
+        // 获取装备全部信息
+        protected Equip GetEquipInfo(string equipName)
+        {
+            Equip equip = new Equip();
+
+            string equipInfo = "";
+
+            foreach (string e in GameConfig.equipInfo)
+            {
+                equipInfo += iniTool.IniReadValue(devPath, equipInfoIni, equipName, e) + ",";
+            }
+
+            equip.Name = equipName;
+
+            equip.Add(equipInfo);
+
+            return equip;
         }
 
         // 保存战斗信息

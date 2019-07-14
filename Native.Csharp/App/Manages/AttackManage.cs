@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Native.Csharp.App.EventArgs;
 using Native.Csharp.App.Models;
 
@@ -10,10 +7,8 @@ namespace Native.Csharp.App.Manages
 {
     class AttackManage : BaseManage
     {
-        public override void Request(object sender, CqGroupMessageEventArgs e)
+        public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
-            string groupPath = devPath + "\\" + e.FromGroup;
-
             string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
 
             if (userName == "")
@@ -64,7 +59,7 @@ namespace Native.Csharp.App.Manages
             {
                 for (int i = 0; i < num; i++)
                 {
-                    res = Fight(user, enemy, e);
+                    res = Fight(user, enemy, e, groupPath);
 
                     if (res == "")
                     {
@@ -73,7 +68,7 @@ namespace Native.Csharp.App.Manages
                 }
             }
             else {
-                res = Fight(user, enemy, e);
+                res = Fight(user, enemy, e, groupPath);
             }
 
             if (res == "")
@@ -87,7 +82,7 @@ namespace Native.Csharp.App.Manages
   
         }
 
-        private string Fight(User user, Enemy enemy, CqGroupMessageEventArgs e) {
+        private string Fight(User user, Enemy enemy, CqGroupMessageEventArgs e, string groupPath) {
 
             int enemyhurt = user.Agg - enemy.Defense;
 
@@ -101,9 +96,12 @@ namespace Native.Csharp.App.Manages
                 {
                     res += enemy.Name + " 被 " + user.Name + " 击败了!";
 
-                    res += Environment.NewLine + SetItem(enemy, e);
+                    res += Environment.NewLine + SetItem(enemy, e, groupPath);
 
-                    iniTool.DeleteSection(devPath + "\\" + e.FromGroup.ToString(), fightIni, e.FromQQ.ToString());
+                    iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
+
+                    eventManage.OnEnemyDeath(user, enemy, groupPath, e.FromQQ.ToString());
+
                     Common.CqApi.SendGroupMessage(e.FromGroup, res);
                     return "";
                 }
@@ -141,7 +139,8 @@ namespace Native.Csharp.App.Manages
             return res;
         }
 
-        private string SetItem(Enemy enemy, CqGroupMessageEventArgs e) {
+        //设置获得物品
+        private string SetItem(Enemy enemy, CqGroupMessageEventArgs e, string groupPath) {
             Random random = new Random();
 
             int rNum = random.Next(0, 100);
@@ -158,14 +157,14 @@ namespace Native.Csharp.App.Manages
 
                 arr = arr[rNum].Split('*');
 
-                int item = iniTool.ReadInt(devPath + "\\" + e.FromGroup.ToString(), KnapsackIni, e.FromQQ.ToString(), arr[0], 0);
+                int item = iniTool.ReadInt(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[0], 0);
 
-                int myCoin = iniTool.ReadInt(devPath + "\\" + e.FromGroup.ToString(), KnapsackIni, e.FromQQ.ToString(), "金币", 0);
+                int myCoin = iniTool.ReadInt(groupPath, KnapsackIni, e.FromQQ.ToString(), "金币", 0);
 
-                iniTool.IniWriteValue(devPath + "\\" + e.FromGroup.ToString(), KnapsackIni, e.FromQQ.ToString(), "金币", (myCoin + enemyCoin).ToString());
-                iniTool.IniWriteValue(devPath + "\\" + e.FromGroup.ToString(), KnapsackIni, e.FromQQ.ToString(), arr[0], (int.Parse(arr[1]) + item).ToString());
+                iniTool.IniWriteValue(groupPath, KnapsackIni, e.FromQQ.ToString(), "金币", (myCoin + enemyCoin).ToString());
+                iniTool.IniWriteValue(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[0], (int.Parse(arr[1]) + item).ToString());
 
-                return "获得：金币*" + enemyCoin.ToString() + ", " + arr[0] + "*" + arr[1];
+                return "获得：金币*" + enemyCoin.ToString() + ", " + arr[0] + "*" + arr[1] + ", 经验增加:" + enemy.Exp.ToString();
             }
 
             return null;

@@ -19,6 +19,7 @@ namespace Native.Csharp.App.Models
         public string Items { get; set; }
         public int Probability { get; set; }
         public int Exp { get; set; }
+        public string Certain { get; set; }
         public string Type { get; set; }
 
         public void Add(string userInfo)
@@ -34,7 +35,8 @@ namespace Native.Csharp.App.Models
             this.Items = arr[7];
             this.Probability = int.Parse(arr[8]);
             this.Exp = int.Parse(arr[9]);
-            this.Type = arr[10];
+            this.Certain = arr[10];
+            this.Type = arr[11];
         }
     }
 }

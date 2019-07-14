@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Native.Csharp.App.EventArgs;
 
 namespace Native.Csharp.App.Manages
@@ -11,13 +8,11 @@ namespace Native.Csharp.App.Manages
     {
         public KnapsackManage()
         {
-            eventManage.registerUser += AddUserKnapsack;
+            eventManage.RegisterUser += AddUserKnapsack;
         }
 
-        public override void Request(object sender, CqGroupMessageEventArgs e)
+        public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
-            string groupPath = devPath + "\\" + e.FromGroup;
-
             string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
 
             if (userName == "")

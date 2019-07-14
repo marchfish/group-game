@@ -1,10 +1,7 @@
 ﻿using Native.Csharp.App.Configs;
 using Native.Csharp.App.EventArgs;
+using Native.Csharp.App.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Native.Csharp.App.Manages
 {
@@ -12,13 +9,11 @@ namespace Native.Csharp.App.Manages
     {
         public EquipManage()
         {
-            eventManage.registerUser += AddUserEquip;
+            eventManage.RegisterUser += AddUserEquip;
         }
 
-        public override void Request(object sender, CqGroupMessageEventArgs e)
+        public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
-            string groupPath = devPath + "\\" + e.FromGroup;
-
             string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
 
             if (userName == "")
@@ -39,9 +34,42 @@ namespace Native.Csharp.App.Manages
 
                 if (item != "")
                 {
-                    iniTool.IniWriteValue(groupPath, equipIni, e.FromQQ.ToString(), "武器", arr[1]);
-                    iniTool.IniWriteValue(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1], "");
-                    Common.CqApi.SendGroupMessage(e.FromGroup, "装备成功");
+                    Equip equipInfo = GetEquipInfo(arr[1]);
+
+                    string userNowEquip = iniTool.IniReadValue(groupPath, equipIni, e.FromQQ.ToString(), equipInfo.Type);
+
+                    User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+
+                    if (userNowEquip != "无")
+                    {
+                        Equip nowEquipInfo = GetEquipInfo(userNowEquip);
+
+                        eventManage.OnUserDownEquip(user, nowEquipInfo, groupPath, e.FromQQ.ToString());
+
+                        string knapsackEquipNum =  iniTool.IniReadValue(groupPath, KnapsackIni, e.FromQQ.ToString(), nowEquipInfo.Name);
+
+                        if (knapsackEquipNum == "")
+                        {
+                            iniTool.WriteInt(groupPath, KnapsackIni, e.FromQQ.ToString(), nowEquipInfo.Name, 1);
+                        }
+                        else {
+                            iniTool.WriteInt(groupPath, KnapsackIni, e.FromQQ.ToString(), nowEquipInfo.Name, 1+int.Parse(knapsackEquipNum));
+                        }
+                    }
+
+                    eventManage.OnUserUpEquip(user, equipInfo, groupPath, e.FromQQ.ToString());
+
+                    iniTool.IniWriteValue(groupPath, equipIni, e.FromQQ.ToString(), equipInfo.Type, arr[1]);
+
+                    if (int.Parse(item) == 1)
+                    {
+                        iniTool.DeleteSectionKey(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1]);
+                    }
+                    else {
+                        iniTool.WriteInt(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1], int.Parse(item) - 1);
+                    }
+
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "装备成功： " + equipInfo.Name);
                 }
                 else {
                     Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您没有该物品");

@@ -6,9 +6,9 @@
         public int HP { get; set; }
         public int MP { get; set; }
         public int Agg { get; set; }
-        public string Magic { get; set; }
-        public string Crit { get; set; }
-        public string Dodge { get; set; }
+        public int Magic { get; set; }
+        public int Crit { get; set; }
+        public int Dodge { get; set; }
         public int Defense { get; set; }
         public int Level { get; set; }
         public int Exp { get; set; }
@@ -22,9 +22,9 @@
             this.HP = int.Parse(arr[1]);
             this.MP = int.Parse(arr[2]);
             this.Agg = int.Parse(arr[3]);
-            this.Magic = arr[4];
-            this.Crit = arr[5];
-            this.Dodge = arr[6];
+            this.Magic = int.Parse(arr[4]);
+            this.Crit = int.Parse(arr[5]);
+            this.Dodge = int.Parse(arr[6]);
             this.Defense = int.Parse(arr[7]);
             this.Level = int.Parse(arr[8]);
             this.Exp = int.Parse(arr[9]);
