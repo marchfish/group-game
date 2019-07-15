@@ -18,5 +18,8 @@
 
         // 装备信息
         public static string[] equip = {"等级", "攻击", "血量", "蓝量", "魔力", "闪避", "暴击", "防御", "品质", "装备方式", "描述"};
+
+        // 道具物品
+        public static string[] recoveryItem = { "血量", "蓝量", "描述", "效果"};
     }
 }

@@ -1,4 +1,5 @@
 ﻿
+using Native.Csharp.App.Configs;
 using Native.Csharp.App.EventArgs;
 using Native.Csharp.App.Models;
 
@@ -16,18 +17,81 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
+            // 获取用户信息
             User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
 
             string[] arr = e.Message.Split(' ');
 
             if (arr.Length > 1)
             {
-                return;
+                int itemNum = GetKnapsackItemNum(arr[1], groupPath, e.FromQQ.ToString());
+
+                if (itemNum == 0) {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "您没有物品：" + arr[1]);
+                    return;
+                }
+
+                string use = iniTool.IniReadValue(devPath, itemIni, arr[1], "效果");
+
+                if (use == "") {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, arr[1] + " 不能使用");
+                    return;
+                }
+
+                if (use == "恢复")
+                {
+                    RecoveryItem recoveryItem =  GetRecoveryItem(arr[1]);
+
+                    user.HP += recoveryItem.HP;
+                    user.MP += recoveryItem.MP;
+
+                    if (user.HP > user.MaxHP) {
+                        user.HP = user.MaxHP;
+                    }
+
+                    if (user.MP > user.MaxMP)
+                    {
+                        user.MP = user.MaxMP;
+                    }
+
+                    iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "血量", user.HP.ToString());
+                    iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "蓝量", user.MP.ToString());
+
+                    if (itemNum == 1)
+                    {
+                        iniTool.DeleteSectionKey(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1]);
+                    }
+                    else
+                    {
+                        iniTool.WriteInt(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1], itemNum - 1);
+                    }
+
+                    Common.CqApi.SendGroupMessage(e.FromGroup, arr[1] + " 使用成功");
+                    return ;
+                }
+
             }
 
             return ;
 
 
         }
+
+        private RecoveryItem GetRecoveryItem(string ItemName)
+        {
+            RecoveryItem recoveryItem = new RecoveryItem();
+
+            string itemInfo = "";
+
+            foreach (string name in GameConfig.recoveryItem)
+            {
+                itemInfo += iniTool.IniReadValue(devPath, itemIni, ItemName, name) + ",";
+            }
+
+            recoveryItem.Add(itemInfo);
+
+            return recoveryItem;
+        }
+
     }
 }

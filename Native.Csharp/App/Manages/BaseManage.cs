@@ -22,6 +22,7 @@ namespace Native.Csharp.App.Manages
         protected string mapIni = "地图配置.ini";
         protected string missionIni = "任务配置.ini";
         protected string missionHistoryIni = "任务信息.ini";
+        protected string itemIni = "道具配置.ini";
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
