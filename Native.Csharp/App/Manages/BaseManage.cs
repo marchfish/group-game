@@ -16,8 +16,8 @@ namespace Native.Csharp.App.Manages
         protected string userInfoIni = "用户信息.ini";
         protected string KnapsackIni = "背包信息.ini";
         protected string fightIni = "战斗信息.ini";
-        protected string equipIni = "装备信息.ini";
-        protected string equipInfoIni = "装备配置.ini";
+        protected string equipInfoIni = "装备信息.ini";
+        protected string equipIni = "装备配置.ini";
         protected string enemyIni = "怪物配置.ini";
         protected string mapIni = "地图配置.ini";
         protected string missionIni = "任务配置.ini";
@@ -25,7 +25,7 @@ namespace Native.Csharp.App.Manages
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
-        // 判断是否是用户获取用户名
+        // 判断是否是用户并获取用户名
         protected string GetUserName(string userId, string groupId) {
 
             string userName = iniTool.IniReadValue(devPath +"\\" + groupId, userInfoIni, userId, "角色名");
@@ -73,15 +73,15 @@ namespace Native.Csharp.App.Manages
         }
 
         // 获取装备全部信息
-        protected Equip GetEquipInfo(string equipName)
+        protected Equip GetEquip(string equipName)
         {
             Equip equip = new Equip();
 
             string equipInfo = "";
 
-            foreach (string e in GameConfig.equipInfo)
+            foreach (string e in GameConfig.equip)
             {
-                equipInfo += iniTool.IniReadValue(devPath, equipInfoIni, equipName, e) + ",";
+                equipInfo += iniTool.IniReadValue(devPath, equipIni, equipName, e) + ",";
             }
 
             equip.Name = equipName;
@@ -89,6 +89,11 @@ namespace Native.Csharp.App.Manages
             equip.Add(equipInfo);
 
             return equip;
+        }
+
+        // 判断背包中是否有该物品并返回数量 
+        protected int GetKnapsackItemNum( string itemName, string groupPath, string userId) {
+            return iniTool.ReadInt(groupPath, KnapsackIni, userId, itemName, 0);
         }
 
         // 保存战斗信息

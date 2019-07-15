@@ -25,24 +25,28 @@ namespace Native.Csharp.App.Manages
 
             if (arr.Length > 1)
             {
-                if (arr[1] == "金币") {
-                    Common.CqApi.SendGroupMessage(e.FromGroup, "金币无法装备");
-                    return;
-                }
+                int itemNum = GetKnapsackItemNum(arr[1], groupPath, e.FromQQ.ToString());
 
-                string item = iniTool.IniReadValue(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1]);
-
-                if (item != "")
+                if (itemNum != 0)
                 {
-                    Equip equipInfo = GetEquipInfo(arr[1]);
+                    string isEquip = iniTool.IniReadValue(devPath, equipIni, arr[1], "装备方式");
 
-                    string userNowEquip = iniTool.IniReadValue(groupPath, equipIni, e.FromQQ.ToString(), equipInfo.Type);
+                    if (isEquip == "") {
+
+                        Common.CqApi.SendGroupMessage(e.FromGroup, "该物品不是装备");
+
+                        return ;
+                    }
+
+                    Equip equipInfo = GetEquip(arr[1]);
+
+                    string userNowEquip = iniTool.IniReadValue(groupPath, equipInfoIni, e.FromQQ.ToString(), equipInfo.Type);
 
                     User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
 
                     if (userNowEquip != "无")
                     {
-                        Equip nowEquipInfo = GetEquipInfo(userNowEquip);
+                        Equip nowEquipInfo = GetEquip(userNowEquip);
 
                         eventManage.OnUserDownEquip(user, nowEquipInfo, groupPath, e.FromQQ.ToString());
 
@@ -59,30 +63,31 @@ namespace Native.Csharp.App.Manages
 
                     eventManage.OnUserUpEquip(user, equipInfo, groupPath, e.FromQQ.ToString());
 
-                    iniTool.IniWriteValue(groupPath, equipIni, e.FromQQ.ToString(), equipInfo.Type, arr[1]);
+                    iniTool.IniWriteValue(groupPath, equipInfoIni, e.FromQQ.ToString(), equipInfo.Type, arr[1]);
 
-                    if (int.Parse(item) == 1)
+                    if (itemNum == 1)
                     {
                         iniTool.DeleteSectionKey(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1]);
                     }
                     else {
-                        iniTool.WriteInt(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1], int.Parse(item) - 1);
+                        iniTool.WriteInt(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1], itemNum - 1);
                     }
 
                     Common.CqApi.SendGroupMessage(e.FromGroup, "装备成功： " + equipInfo.Name);
-                }
-                else {
-                    Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您没有该物品");
-                }
 
+                    return ;
+                }
+                
+                Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您没有该物品");
+                
                 return;
             }
 
             string equip = "[" + userName + "]" + Environment.NewLine;
 
-            foreach (string userEquip in GameConfig.equip)
+            foreach (string userEquip in GameConfig.equipInfo)
             {
-                equip += userEquip + "：" + iniTool.IniReadValue(groupPath, equipIni, e.FromQQ.ToString(), userEquip) + Environment.NewLine;
+                equip += userEquip + "：" + iniTool.IniReadValue(groupPath, equipInfoIni, e.FromQQ.ToString(), userEquip) + Environment.NewLine;
             }
 
             equip = equip.Substring(0, equip.Length - Environment.NewLine.Length);
@@ -96,9 +101,9 @@ namespace Native.Csharp.App.Manages
         {
             string groupPath = devPath + "\\" + groupId;
 
-            for (int i = 0; i < GameConfig.equip.Length; i++)
+            for (int i = 0; i < GameConfig.equipInfo.Length; i++)
             {
-                iniTool.IniWriteValue(groupPath, equipIni, userId, GameConfig.equip[i], GameConfig.equipDefault[i]);
+                iniTool.IniWriteValue(groupPath, equipInfoIni, userId, GameConfig.equipInfo[i], GameConfig.equipDefault[i]);
             }
         }
     }

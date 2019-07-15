@@ -40,6 +40,7 @@ namespace Native.Csharp.App.Manages
                 iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), GameConfig.userInfo[i], GameConfig.userInfoDefault[i]);
             }
 
+
             // 触发订阅
             eventManage.OnRegisterUser(e.FromQQ.ToString(), e.FromGroup.ToString());
 
