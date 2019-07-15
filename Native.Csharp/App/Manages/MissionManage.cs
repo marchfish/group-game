@@ -7,10 +7,8 @@ namespace Native.Csharp.App.Manages
 {
     class MissionManage : BaseManage
     {
-        public override void Request(object sender, CqGroupMessageEventArgs e)
+        public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
-            string groupPath = devPath + "\\" + e.FromGroup;
-
             string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
 
             if (userName == "")
