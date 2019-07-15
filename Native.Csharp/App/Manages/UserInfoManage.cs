@@ -26,10 +26,14 @@ namespace Native.Csharp.App.Manages
             string userInfo = "";
 
             foreach (string user in GameConfig.userInfo) {
+                if (user == "最大血量" || user  == "最大蓝量")
+                {
+                    continue ;
+                }
                 userInfo += user + "：" +  iniTool.IniReadValue(groupPath, userInfoIni, e.FromQQ.ToString(), user) + Environment.NewLine;
             }
 
-            userInfo = userInfo.Substring(0, userInfo.Length - Environment.NewLine.Length);
+            userInfo = SubRN( userInfo );
 
             Common.CqApi.SendGroupMessage(e.FromGroup, userInfo);
             return;

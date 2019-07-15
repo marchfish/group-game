@@ -14,6 +14,8 @@
         public int Exp { get; set; }
         public string Fame { get; set; }
         public string Pos { get; set; }
+        public int MaxHP { get; set; }
+        public int MaxMP { get; set; }
 
         public void Add(string userInfo)
         {
@@ -30,6 +32,8 @@
             this.Exp = int.Parse(arr[9]);
             this.Fame = arr[10];
             this.Pos = arr[11];
+            this.MaxHP = int.Parse(arr[12]);
+            this.MaxMP = int.Parse(arr[13]);
         }
 
 
