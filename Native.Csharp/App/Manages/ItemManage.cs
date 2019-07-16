@@ -57,14 +57,8 @@ namespace Native.Csharp.App.Manages
                     iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "血量", user.HP.ToString());
                     iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "蓝量", user.MP.ToString());
 
-                    if (itemNum == 1)
-                    {
-                        iniTool.DeleteSectionKey(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1]);
-                    }
-                    else
-                    {
-                        iniTool.WriteInt(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[1], itemNum - 1);
-                    }
+                    // 使用背包物品
+                    SetKnapsackItemNum(arr[1], itemNum, 1, groupPath, e.FromQQ.ToString());
 
                     Common.CqApi.SendGroupMessage(e.FromGroup, arr[1] + " 使用成功");
                     return ;
@@ -73,7 +67,6 @@ namespace Native.Csharp.App.Manages
             }
 
             return ;
-
 
         }
 

@@ -23,6 +23,7 @@ namespace Native.Csharp.App.Manages
         protected string missionIni = "任务配置.ini";
         protected string missionHistoryIni = "任务信息.ini";
         protected string itemIni = "道具配置.ini";
+        protected string levelIni = "等级配置.ini";
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
@@ -95,6 +96,44 @@ namespace Native.Csharp.App.Manages
         // 判断背包中是否有该物品并返回数量 
         protected int GetKnapsackItemNum( string itemName, string groupPath, string userId) {
             return iniTool.ReadInt(groupPath, KnapsackIni, userId, itemName, 0);
+        }
+
+        // 使用（减少）新更背包中的物品数量
+        protected bool SetKnapsackItemNum(string itemName,int nowNum, int useNum, string groupPath, string userId)
+        {
+            if (useNum > nowNum) {
+                return false;
+            }
+
+            if (nowNum == useNum)
+            {
+                iniTool.DeleteSectionKey(groupPath, KnapsackIni, userId, itemName);
+            }
+            else
+            {
+                iniTool.WriteInt(groupPath, KnapsackIni, userId, itemName, nowNum - useNum);
+            }
+
+            return true;
+        }
+
+        // 获取等级信息
+        protected Level GetLevel(int levelName)
+        {
+            Level level = new Level();
+
+            string levelInfo = "";
+
+            foreach (string e in GameConfig.level)
+            {
+                levelInfo += iniTool.IniReadValue(devPath, levelIni, levelName.ToString(), e) + ",";
+            }
+
+            level.Name = levelName;
+
+            level.Add(levelInfo);
+
+            return level;
         }
 
         // 保存战斗信息

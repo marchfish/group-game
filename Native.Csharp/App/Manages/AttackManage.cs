@@ -104,7 +104,7 @@ namespace Native.Csharp.App.Manages
 
                     iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
 
-                    eventManage.OnEnemyDeath(user, enemy, groupPath, e.FromQQ.ToString());
+                    eventManage.OnEnemyDeath(user, enemy, groupPath, e);
 
                     res += Environment.NewLine  + "经验增加：" + enemy.Exp.ToString();
 

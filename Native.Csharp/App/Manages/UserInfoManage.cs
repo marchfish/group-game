@@ -80,11 +80,13 @@ namespace Native.Csharp.App.Manages
         }
 
         // 增加经验
-        public void IncreaseEXP(User user, Enemy enemy, string groupPath, string userId)
+        public void IncreaseEXP(User user, Enemy enemy, string groupPath, CqGroupMessageEventArgs e)
         {
             user.Exp += enemy.Exp;
 
-            iniTool.WriteInt(groupPath, userInfoIni, userId, "经验", user.Exp);
+            iniTool.WriteInt(groupPath, userInfoIni, e.FromQQ.ToString(), "经验", user.Exp);
+
+            eventManage.OnIsUplevel(user, groupPath, e);
         }
     }
 }
