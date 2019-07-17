@@ -35,6 +35,7 @@ namespace Native.Csharp.App.Manages
             managesDit.Add("使用", new ItemManage());
             managesDit.Add("等级", new LevelManage());
             managesDit.Add("商城", new ShopManage());
+            managesDit.Add("排行", new RankManage());
         }
 
         public void AddManage(String manageName, BaseManage manage)
