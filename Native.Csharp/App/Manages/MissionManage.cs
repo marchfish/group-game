@@ -35,6 +35,13 @@ namespace Native.Csharp.App.Manages
                     return;
                 }
 
+                if (arr[0] == "提交任务") {
+
+                    SubmitMission(user, arr[1], e, groupPath);
+                    return;
+                
+                }
+
                 string mission = iniTool.IniReadValue(devPath, missionIni, arr[1], "内容");
 
                 Common.CqApi.SendGroupMessage(e.FromGroup, System.Text.RegularExpressions.Regex.Unescape(mission));
@@ -84,6 +91,73 @@ namespace Native.Csharp.App.Manages
             iniTool.IniWriteValue(groupPath, missionHistoryIni, e.FromQQ.ToString(), missionName, "进行中");
 
             Common.CqApi.SendGroupMessage(e.FromGroup, missionName + "接受成功！");
+        }
+
+        // 提交任务
+        private void SubmitMission(User user, string missionName, CqGroupMessageEventArgs e, string groupPath)
+        {
+            string myMission = iniTool.IniReadValue(groupPath, missionHistoryIni, e.FromQQ.ToString(), missionName);
+
+            if (myMission == "")
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "您没有接受任务“" + missionName + "”");
+                return;
+            }
+
+            if (myMission == "已完成")
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "您已完成任务“" + missionName + "”");
+                return;
+            }
+
+            string item = iniTool.IniReadValue(devPath, missionIni, missionName, "背包");
+
+            string[] items = item.Split('*');
+
+            int myItemNum = GetKnapsackItemNum(items[0], groupPath, e.FromQQ.ToString());
+
+            if (myItemNum < int.Parse(items[1])) {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "提交失败：您背包里没有任务需要的物品数量！");
+                return;
+            }
+
+            if (! SetKnapsackItemNum(items[0], myItemNum, int.Parse(items[1]), groupPath, e.FromQQ.ToString())) {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "提交失败：请重试！");
+                return;
+            };
+
+            string reward = iniTool.IniReadValue(devPath, missionIni, missionName, "奖励");
+            int exp = iniTool.ReadInt(devPath, missionIni, missionName, "经验", 0);
+
+            string[] rewards = reward.Split('|');
+
+            foreach (string rew in rewards) {
+
+                string[] temp = rew.Split('*');
+
+                int myNum = GetKnapsackItemNum(temp[0], groupPath, e.FromQQ.ToString());
+
+                iniTool.WriteInt(groupPath, KnapsackIni, e.FromQQ.ToString(), temp[0], myNum + int.Parse(temp[1]));
+
+            }
+
+            user.Exp += exp;
+
+            iniTool.WriteInt(groupPath, userInfoIni, e.FromQQ.ToString(), "经验", user.Exp);
+
+            iniTool.IniWriteValue(groupPath, missionHistoryIni, e.FromQQ.ToString(), missionName, "已完成");
+
+            eventManage.OnIsUplevel(user, groupPath, e);
+
+            string delivery = iniTool.IniReadValue(devPath, missionIni, missionName, "传送");
+
+            if (delivery != "") {
+                iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "当前位置", "delivery");
+            }
+
+            Common.CqApi.SendGroupMessage(e.FromGroup, "提交成功任务 “" + missionName + "”");
+            return;
+        
         }
 
         // 获取已经接受的任务
