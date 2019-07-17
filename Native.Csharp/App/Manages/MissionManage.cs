@@ -66,7 +66,7 @@ namespace Native.Csharp.App.Manages
                 missions += item + Environment.NewLine;
             }
 
-            missions += "输入：任务 你想要了解的任务 （即可查看详情）";
+            missions += "输入：任务 任务名称";
 
             Common.CqApi.SendGroupMessage(e.FromGroup, missions);
         }
@@ -121,7 +121,7 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            if (! SetKnapsackItemNum(items[0], myItemNum, int.Parse(items[1]), groupPath, e.FromQQ.ToString())) {
+            if (!DeleteKnapsackItemNum(items[0], myItemNum, int.Parse(items[1]), groupPath, e.FromQQ.ToString())) {
                 Common.CqApi.SendGroupMessage(e.FromGroup, "提交失败：请重试！");
                 return;
             };
@@ -147,15 +147,16 @@ namespace Native.Csharp.App.Manages
 
             iniTool.IniWriteValue(groupPath, missionHistoryIni, e.FromQQ.ToString(), missionName, "已完成");
 
-            eventManage.OnIsUplevel(user, groupPath, e);
-
             string delivery = iniTool.IniReadValue(devPath, missionIni, missionName, "传送");
 
             if (delivery != "") {
-                iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "当前位置", "delivery");
+                iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "当前位置", delivery);
             }
 
-            Common.CqApi.SendGroupMessage(e.FromGroup, "提交成功任务 “" + missionName + "”");
+            Common.CqApi.SendGroupMessage(e.FromGroup, "完成任务 “" + missionName + "”");
+
+            eventManage.OnIsUplevel(user, groupPath, e);
+
             return;
         
         }
@@ -177,7 +178,7 @@ namespace Native.Csharp.App.Manages
                 missions += item + ": " + iniTool.IniReadValue(groupPath, missionHistoryIni, e.FromQQ.ToString(), item) + Environment.NewLine;
             }
 
-            missions += "提交任务指令： 提交任务 您想要提交的任务（即可提交任务）";
+            missions += "输入： 提交任务 任务名称";
 
             Common.CqApi.SendGroupMessage(e.FromGroup, missions);
         }

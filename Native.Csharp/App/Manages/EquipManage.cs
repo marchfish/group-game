@@ -66,7 +66,7 @@ namespace Native.Csharp.App.Manages
                     iniTool.IniWriteValue(groupPath, equipInfoIni, e.FromQQ.ToString(), equipInfo.Type, arr[1]);
 
                     // 更新背包物品
-                    SetKnapsackItemNum(equipInfo.Name, itemNum, 1, groupPath, e.FromQQ.ToString());
+                    DeleteKnapsackItemNum(equipInfo.Name, itemNum, 1, groupPath, e.FromQQ.ToString());
 
                     Common.CqApi.SendGroupMessage(e.FromGroup, "装备成功： " + equipInfo.Name);
 

@@ -58,7 +58,7 @@ namespace Native.Csharp.App.Manages
                     iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "蓝量", user.MP.ToString());
 
                     // 使用背包物品
-                    SetKnapsackItemNum(arr[1], itemNum, 1, groupPath, e.FromQQ.ToString());
+                    DeleteKnapsackItemNum(arr[1], itemNum, 1, groupPath, e.FromQQ.ToString());
 
                     Common.CqApi.SendGroupMessage(e.FromGroup, arr[1] + " 使用成功");
                     return ;

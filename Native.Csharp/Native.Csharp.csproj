@@ -18,7 +18,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>C:\Users\Admin\Desktop\cpq\dev\</OutputPath>
+    <OutputPath>C:\Users\Administrator\Desktop\cpq\dev\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -165,6 +165,7 @@
     <Compile Include="App\Manages\MapManage.cs" />
     <Compile Include="App\Manages\MissionManage.cs" />
     <Compile Include="App\Manages\RegisterManage.cs" />
+    <Compile Include="App\Manages\ShopManage.cs" />
     <Compile Include="App\Manages\UserInfoManage.cs" />
     <Compile Include="App\Models\Enemy.cs" />
     <Compile Include="App\Models\Equip.cs" />

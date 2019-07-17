@@ -1,4 +1,5 @@
 ﻿using Native.Csharp.App.EventArgs;
+using Native.Csharp.App.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,14 @@ namespace Native.Csharp.App.Manages
 
             if (userName == "")
             {
+                return;
+            }
+
+            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+
+            if (user.HP <= 0)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您已死亡：请复活后继续!");
                 return;
             }
 
