@@ -216,6 +216,24 @@ namespace Tools
             return result;
         }
 
+        /// <summary>
+        /// 读取指定 节
+        /// </summary>
+        /// <returns></returns>
+        public List<string> IniReadSection(string filePath, string iniName)
+        {
+            List<string> result = new List<string>();
+            Byte[] buf = new Byte[65536];
+            uint len = GetPrivateProfileStringA(null, null, null, buf, buf.Length, filePath + "\\" + iniName);
+            int j = 0;
+            for (int i = 0; i < len; i++)
+                if (buf[i] == 0)
+                {
+                    result.Add(Encoding.Default.GetString(buf, j, i - j));
+                    j = i + 1;
+                }
+            return result;
+        }
 
         /// <summary>
         /// 写入指定值，如果不存在 节-键，则会自动创建

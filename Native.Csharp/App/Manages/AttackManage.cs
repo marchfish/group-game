@@ -40,6 +40,13 @@ namespace Native.Csharp.App.Manages
 
             User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
 
+            if (user.HP <= 0)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您已死亡：请复活后继续!");
+                return ;
+            }
+
+
             string pos = iniTool.IniReadValue(groupPath, fightIni, e.FromQQ.ToString(), "当前位置");
 
             string enemyName = iniTool.IniReadValue(devPath, mapIni, user.Pos, "怪物");
@@ -104,11 +111,12 @@ namespace Native.Csharp.App.Manages
 
                     iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
 
-                    eventManage.OnEnemyDeath(user, enemy, groupPath, e);
-
                     res += Environment.NewLine  + "经验增加：" + enemy.Exp.ToString();
 
                     Common.CqApi.SendGroupMessage(e.FromGroup, res);
+
+                    eventManage.OnEnemyDeath(user, enemy, groupPath, e);
+
                     return "";
                 }
               

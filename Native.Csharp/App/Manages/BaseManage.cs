@@ -24,6 +24,7 @@ namespace Native.Csharp.App.Manages
         protected string missionHistoryIni = "任务信息.ini";
         protected string itemIni = "道具配置.ini";
         protected string levelIni = "等级配置.ini";
+        protected string shopIni = "商城配置.ini";
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
@@ -99,7 +100,7 @@ namespace Native.Csharp.App.Manages
         }
 
         // 使用（减少）新更背包中的物品数量
-        protected bool SetKnapsackItemNum(string itemName,int nowNum, int useNum, string groupPath, string userId)
+        protected bool DeleteKnapsackItemNum(string itemName,int nowNum, int useNum, string groupPath, string userId)
         {
             if (useNum > nowNum) {
                 return false;
@@ -114,6 +115,16 @@ namespace Native.Csharp.App.Manages
                 iniTool.WriteInt(groupPath, KnapsackIni, userId, itemName, nowNum - useNum);
             }
 
+            return true;
+        }
+
+        // 增加（购买）新更背包中的物品数量
+        protected bool SetKnapsackItemNum(string itemName, int setNum, string groupPath, string userId)
+        {
+            int itemNum = GetKnapsackItemNum(itemName, groupPath, userId);
+
+            iniTool.WriteInt(groupPath, KnapsackIni, userId, itemName, itemNum + setNum);
+           
             return true;
         }
 

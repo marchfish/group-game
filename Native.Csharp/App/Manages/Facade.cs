@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tools;
 
 namespace Native.Csharp.App.Manages
@@ -37,6 +34,7 @@ namespace Native.Csharp.App.Manages
             managesDit.Add("任务", new MissionManage());
             managesDit.Add("使用", new ItemManage());
             managesDit.Add("等级", new LevelManage());
+            managesDit.Add("商城", new ShopManage());
         }
 
         public void AddManage(String manageName, BaseManage manage)
