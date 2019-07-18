@@ -40,8 +40,10 @@ namespace Native.Csharp.App.Manages
         }
 
         // 用户装备
-        public void UserUpEquip(User user, Equip equip, string groupPath, string userId)
+        public void UserUpEquip(User user, Equip equip, string groupPath, CqGroupMessageEventArgs e)
         {
+            string userId = e.FromQQ.ToString();
+
             user.Agg += equip.Agg;
             user.HP += equip.HP;
             user.MP += equip.MP;
