@@ -52,6 +52,8 @@ namespace Native.Csharp.App.Manages
                     SetUser(user, groupPath, e.FromQQ.ToString());
 
                     Common.CqApi.SendGroupMessage(e.FromGroup, "恭喜您等级提升为：" + user.Level);
+
+                    eventManage.OnUplevel(user, groupPath, e);
                 }
                 else
                 {

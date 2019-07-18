@@ -61,7 +61,7 @@ namespace Native.Csharp.App.Manages
                         }
                     }
 
-                    eventManage.OnUserUpEquip(user, equipInfo, groupPath, e.FromQQ.ToString());
+                    eventManage.OnUserUpEquip(user, equipInfo, groupPath, e);
 
                     iniTool.IniWriteValue(groupPath, equipInfoIni, e.FromQQ.ToString(), equipInfo.Type, arr[1]);
 

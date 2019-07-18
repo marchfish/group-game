@@ -4,10 +4,11 @@ using Native.Csharp.App.Models;
 namespace Native.Csharp.App.Manages
 {
     public delegate void RegisterUser(string userId, string groupId);
-    public delegate void UserUpEquip(User user, Equip equip, string groupPath, string userId);
+    public delegate void UserUpEquip(User user, Equip equip, string groupPath, CqGroupMessageEventArgs e);
     public delegate void UserDownEquip(User user, Equip equip, string groupPath, string userId);
     public delegate void EnemyDeath(User user, Enemy enemy, string groupPath, CqGroupMessageEventArgs e);
     public delegate void IsUplevel(User user, string groupPath, CqGroupMessageEventArgs e);
+    public delegate void Uplevel(User user, string groupPath, CqGroupMessageEventArgs e);
 
     public class EventManage
     {
@@ -16,6 +17,7 @@ namespace Native.Csharp.App.Manages
         public event UserDownEquip UserDownEquip;
         public event EnemyDeath EnemyDeath;
         public event IsUplevel IsUplevel;
+        public event Uplevel Uplevel;
 
         // 注册用户
         public void OnRegisterUser(string userId, string groupId)
@@ -24,9 +26,9 @@ namespace Native.Csharp.App.Manages
         }
 
         // 装备物品
-        public void OnUserUpEquip(User user, Equip equip, string groupPath, string userId)
+        public void OnUserUpEquip(User user, Equip equip, string groupPath, CqGroupMessageEventArgs e)
         {
-            UserUpEquip?.Invoke(user, equip, groupPath, userId);
+            UserUpEquip?.Invoke(user, equip, groupPath, e);
         }
 
         // 卸下装备
@@ -45,6 +47,12 @@ namespace Native.Csharp.App.Manages
         public void OnIsUplevel(User user, string groupPath, CqGroupMessageEventArgs e)
         {
             IsUplevel?.Invoke(user, groupPath, e);
+        }
+
+        // 升级
+        public void OnUplevel(User user, string groupPath, CqGroupMessageEventArgs e)
+        {
+            Uplevel?.Invoke(user, groupPath, e);
         }
     }
 }
