@@ -24,7 +24,7 @@ namespace Native.Csharp.App.Manages
         public Facade()
         {
             facade = this;
-
+            
             managesDit.Add("注册用户", new RegisterManage());
             managesDit.Add("背包", new KnapsackManage());
             managesDit.Add("角色信息", new UserInfoManage());
@@ -36,6 +36,8 @@ namespace Native.Csharp.App.Manages
             managesDit.Add("等级", new LevelManage());
             managesDit.Add("商城", new ShopManage());
             managesDit.Add("排行", new RankManage());
+            managesDit.Add("复活", new ReviveManage());
+            managesDit.Add("传送", new MoveManage());
         }
 
         public void AddManage(String manageName, BaseManage manage)
