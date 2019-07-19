@@ -5,6 +5,10 @@ namespace Native.Csharp.App.Manages
 {
     class MoveManage : BaseManage
     {
+        public MoveManage() {
+            eventManage.EnemyDeath += MoveForEnemy;
+        }
+
         public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
             string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
@@ -44,6 +48,17 @@ namespace Native.Csharp.App.Manages
                 Common.CqApi.SendGroupMessage(e.FromGroup, "您已传送至：" + user.Pos);
 
                 return;
+            }
+        }
+
+        public void MoveForEnemy(User user, Enemy enemy, string groupPath, CqGroupMessageEventArgs e)
+        {
+            if (enemy.Move != "") {
+                user.Pos = enemy.Move;
+
+                iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "当前位置", user.Pos);
+
+                Common.CqApi.SendGroupMessage(e.FromGroup, "您已传送至：" + user.Pos);
             }
         }
     }
