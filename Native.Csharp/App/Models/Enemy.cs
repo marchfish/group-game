@@ -21,6 +21,7 @@ namespace Native.Csharp.App.Models
         public int Exp { get; set; }
         public string Certain { get; set; }
         public string Type { get; set; }
+        public string Move { get; set; }
 
         public void Add(string userInfo)
         {
@@ -37,6 +38,7 @@ namespace Native.Csharp.App.Models
             this.Exp = int.Parse(arr[9]);
             this.Certain = arr[10];
             this.Type = arr[11];
+            this.Move = arr[12];
         }
     }
 }

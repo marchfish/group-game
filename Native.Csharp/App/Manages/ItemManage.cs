@@ -20,6 +20,12 @@ namespace Native.Csharp.App.Manages
             // 获取用户信息
             User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
 
+            if (user.HP <= 0)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您已死亡：请复活后继续!");
+                return;
+            }
+
             string[] arr = e.Message.Split(' ');
 
             if (arr.Length > 1)
