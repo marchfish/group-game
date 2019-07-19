@@ -26,6 +26,7 @@ namespace Native.Csharp.App.Manages
         protected string levelIni = "等级配置.ini";
         protected string shopIni = "商城配置.ini";
         protected string panksIni = "排行信息.ini";
+        protected string reviveIni = "复活配置.ini";
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 

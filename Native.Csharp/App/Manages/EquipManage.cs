@@ -46,6 +46,10 @@ namespace Native.Csharp.App.Manages
 
                     if (userNowEquip != "无")
                     {
+                        if (userNowEquip == equipInfo.Name) {
+                            itemNum += 1;
+                        }
+
                         Equip nowEquipInfo = GetEquip(userNowEquip);
 
                         eventManage.OnUserDownEquip(user, nowEquipInfo, groupPath, e.FromQQ.ToString());
@@ -60,6 +64,7 @@ namespace Native.Csharp.App.Manages
                             iniTool.WriteInt(groupPath, KnapsackIni, e.FromQQ.ToString(), nowEquipInfo.Name, 1+int.Parse(knapsackEquipNum));
                         }
                     }
+
 
                     eventManage.OnUserUpEquip(user, equipInfo, groupPath, e);
 
