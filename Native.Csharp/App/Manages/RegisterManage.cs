@@ -1,9 +1,4 @@
 ﻿using Native.Csharp.App.EventArgs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Native.Csharp.App.Configs;
 
 namespace Native.Csharp.App.Manages

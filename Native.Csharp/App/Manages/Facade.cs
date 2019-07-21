@@ -37,7 +37,10 @@ namespace Native.Csharp.App.Manages
             managesDit.Add("商城", new ShopManage());
             managesDit.Add("排行", new RankManage());
             managesDit.Add("复活", new ReviveManage());
-            managesDit.Add("传送", new MoveManage());
+            managesDit.Add("传送", new MoveManage()); 
+            managesDit.Add("回收", new RecycleManage()); 
+            managesDit.Add("拍卖行", new BusinessManage());
+            managesDit.Add("查看", new FindManage());
         }
 
         public void AddManage(String manageName, BaseManage manage)

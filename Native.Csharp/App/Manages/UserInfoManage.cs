@@ -22,7 +22,33 @@ namespace Native.Csharp.App.Manages
             {
                 return;
             }
- 
+
+            string[] arr = e.Message.Split(' ');
+
+            if (arr[0] == "改名") {
+                if (arr.Length > 1)
+                {
+                    int myItem = GetKnapsackItemNum("改名卡", groupPath, e.FromQQ.ToString());
+
+                    if (myItem == 0) {
+
+                        Common.CqApi.SendGroupMessage(e.FromGroup, "您没有改名卡");
+                        return;
+
+                    }
+
+                    iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "角色名", arr[1]);
+
+                    DeleteKnapsackItemNum("改名卡", myItem, 1, groupPath, e.FromQQ.ToString());
+
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "改名成功：" + arr[1]);
+                    return;
+                }
+
+                Common.CqApi.SendGroupMessage(e.FromGroup, "请输入您要修改的名称");
+                return;
+            }
+
             string userInfo = "";
 
             foreach (string user in GameConfig.userInfo) {

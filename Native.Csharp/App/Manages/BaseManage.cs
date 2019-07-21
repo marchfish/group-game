@@ -27,6 +27,8 @@ namespace Native.Csharp.App.Manages
         protected string shopIni = "商城配置.ini";
         protected string panksIni = "排行信息.ini";
         protected string reviveIni = "复活配置.ini";
+        protected string recycleIni = "回收配置.ini";
+        protected string businessIni = "拍卖行信息.ini";
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
@@ -128,6 +130,23 @@ namespace Native.Csharp.App.Manages
             iniTool.WriteInt(groupPath, KnapsackIni, userId, itemName, itemNum + setNum);
            
             return true;
+        }
+
+        // 获取药品信息
+        protected RecoveryItem GetRecoveryItem(string ItemName)
+        {
+            RecoveryItem recoveryItem = new RecoveryItem();
+
+            string itemInfo = "";
+
+            foreach (string name in GameConfig.recoveryItem)
+            {
+                itemInfo += iniTool.IniReadValue(devPath, itemIni, ItemName, name) + ",";
+            }
+
+            recoveryItem.Add(itemInfo);
+
+            return recoveryItem;
         }
 
         // 获取等级信息
