@@ -111,7 +111,9 @@ namespace Native.Csharp.App.Manages
 
                     iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
 
-                    res += Environment.NewLine  + "经验增加：" + enemy.Exp.ToString();
+                    res += Environment.NewLine  + "经验增加：" + enemy.Exp.ToString() + Environment.NewLine;
+
+                    res += "当前血量：" + user.HP;
 
                     Common.CqApi.SendGroupMessage(e.FromGroup, res);
 

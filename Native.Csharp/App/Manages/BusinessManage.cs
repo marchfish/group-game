@@ -165,6 +165,12 @@ namespace Native.Csharp.App.Manages
         {
             BusinessItem businessItem = GetBusinessItem(groupPath, itemNo);
 
+            if (businessItem.Coin == 0)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "购买失败：没有编号为" + itemNo + "的商品!");
+                return;
+            }
+
             if (businessItem.UserId == e.FromQQ.ToString())
             {
                 Common.CqApi.SendGroupMessage(e.FromGroup, "购买失败：不能购买自己上架的物品!");
