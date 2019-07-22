@@ -29,7 +29,7 @@ namespace Native.Csharp.App.Manages
 
             string position = iniTool.IniReadValue(groupPath, "用户信息.ini", e.FromQQ.ToString(), "当前位置");
 
-            if (e.Message == "上" || e.Message == "下" || e.Message == "左" || e.Message == "右")
+            if (e.Message == "上" || e.Message == "下" || e.Message == "左" || e.Message == "右" || e.Message == "前" || e.Message == "后")
             {
                 string nextPos = iniTool.IniReadValue(devPath, mapIni, position, e.Message);
                 if (nextPos != "")
