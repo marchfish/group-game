@@ -84,7 +84,7 @@ namespace Native.Csharp.App.Manages
                     // 使用背包物品
                     DeleteKnapsackItemNum(arr[1], itemNum, 1, groupPath, e.FromQQ.ToString());
 
-                    Common.CqApi.SendGroupMessage(e.FromGroup, "使用成功：" + arr[1] + "*" + count);
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "使用成功：" + arr[1] + "*" + count + Environment.NewLine + "当前血量：" + user.HP);
                     return ;
                 }
 
