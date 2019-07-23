@@ -40,12 +40,23 @@ namespace Native.Csharp.App.Manages
 
                     Equip equipInfo = GetEquip(arr[1]);
 
-                    string userNowEquip = iniTool.IniReadValue(groupPath, equipInfoIni, e.FromQQ.ToString(), equipInfo.Type);
-
                     User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+
+                    if (equipInfo.Level > user.Level)
+                    {
+                        Common.CqApi.SendGroupMessage(e.FromGroup, "装备失败：您的等级不足" + equipInfo.Level);
+
+                        return;
+                    }
+
+                    string userNowEquip = iniTool.IniReadValue(groupPath, equipInfoIni, e.FromQQ.ToString(), equipInfo.Type);
 
                     if (userNowEquip != "无")
                     {
+                        if (userNowEquip == equipInfo.Name) {
+                            itemNum += 1;
+                        }
+
                         Equip nowEquipInfo = GetEquip(userNowEquip);
 
                         eventManage.OnUserDownEquip(user, nowEquipInfo, groupPath, e.FromQQ.ToString());
@@ -61,7 +72,8 @@ namespace Native.Csharp.App.Manages
                         }
                     }
 
-                    eventManage.OnUserUpEquip(user, equipInfo, groupPath, e.FromQQ.ToString());
+
+                    eventManage.OnUserUpEquip(user, equipInfo, groupPath, e);
 
                     iniTool.IniWriteValue(groupPath, equipInfoIni, e.FromQQ.ToString(), equipInfo.Type, arr[1]);
 

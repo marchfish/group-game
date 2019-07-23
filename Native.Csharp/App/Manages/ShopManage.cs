@@ -40,17 +40,17 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            List<string> items = iniTool.IniReadSection(devPath, shopIni);
+            List<string> items = iniTool.IniReadSectionKey(devPath, shopIni, "商城");
 
             string shopItems = "[物品商城]" + Environment.NewLine;
 
             foreach (string item in items)
             {
-                string name = iniTool.IniReadValue(devPath, shopIni, item, "名称");
+                string name = iniTool.IniReadValue(devPath, shopIni, "商城", item);
 
-                string coin = iniTool.IniReadValue(devPath, shopIni, item, "金币");
+                string[] arrItem = name.Split('*');
 
-                shopItems += item + "：" + name + "--" + coin + "金币" + Environment.NewLine;
+                shopItems += item + "：" + arrItem[0] + "--" + arrItem[1] + "金币" + Environment.NewLine;
             }
 
             shopItems += "输入：购买 物品编号";
@@ -62,23 +62,30 @@ namespace Native.Csharp.App.Manages
 
         private void Pay(string itemNo, int itemNum, string groupPath, User user, CqGroupMessageEventArgs e) {
 
-            string name = iniTool.IniReadValue(devPath, shopIni, itemNo, "名称");
+            string name = iniTool.IniReadValue(devPath, shopIni, "商城", itemNo);
 
-            int coin = iniTool.ReadInt(devPath, shopIni, itemNo, "金币", 1);
+            if (name == "") {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "购买失败：没有编号为"+ itemNo +"的物品!");
+                return;
+            }
+
+            string itemInfo = iniTool.IniReadValue(devPath, shopIni, "商城", itemNo);
+
+            string[] item = itemInfo.Split('*');
 
             int myCoin = GetKnapsackItemNum("金币", groupPath, e.FromQQ.ToString());
 
-            if (myCoin < itemNum*coin)
+            if (myCoin < itemNum*int.Parse(item[1]))
             {
                 Common.CqApi.SendGroupMessage(e.FromGroup, "购买失败：您没有足够的金币!");
                 return;
             }
 
-            SetKnapsackItemNum(name, itemNum, groupPath, e.FromQQ.ToString());
+            SetKnapsackItemNum(item[0], itemNum, groupPath, e.FromQQ.ToString());
 
-            iniTool.WriteInt(groupPath, KnapsackIni, e.FromQQ.ToString(), "金币", myCoin - (itemNum * coin));
+            DeleteKnapsackItemNum("金币", myCoin, itemNum * int.Parse(item[1]), groupPath, e.FromQQ.ToString());
 
-            Common.CqApi.SendGroupMessage(e.FromGroup, "购买成功：" + name + "*" + itemNum + ", -" + (itemNum * coin) + "金币");
+            Common.CqApi.SendGroupMessage(e.FromGroup, "购买成功：" + item[0] + "*" + itemNum + ", -" + (itemNum * int.Parse(item[1])) + "金币");
 
             return;
         }

@@ -111,7 +111,9 @@ namespace Native.Csharp.App.Manages
 
                     iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
 
-                    res += Environment.NewLine  + "经验增加：" + enemy.Exp.ToString();
+                    res += Environment.NewLine  + "经验增加：" + enemy.Exp.ToString() + Environment.NewLine;
+
+                    res += "当前血量：" + user.HP;
 
                     Common.CqApi.SendGroupMessage(e.FromGroup, res);
 
@@ -124,7 +126,7 @@ namespace Native.Csharp.App.Manages
                 
             } else {
 
-                res += user.Name + " 攻击 " + enemy.Name + "，" + enemy.Name + "的血量 -" + enemyhurt + " 剩余：" + enemy.HP + Environment.NewLine;
+                res += user.Name + " 攻击 " + enemy.Name + "，" + enemy.Name + "的血量 -" + 0 + " 剩余：" + enemy.HP + Environment.NewLine;
 
             }
 
@@ -155,7 +157,7 @@ namespace Native.Csharp.App.Manages
             }
             else
             {
-                res += enemy.Name + " 攻击 " + user.Name + "，" + user.Name + "的血量 -" + userhurt + " 剩余：" + user.HP;
+                res += enemy.Name + " 攻击 " + user.Name + "，" + user.Name + "的血量 -" + 0 + " 剩余：" + user.HP;
             }
 
             return res;
@@ -178,11 +180,13 @@ namespace Native.Csharp.App.Manages
                 res += certainArr[0] + "*" + certainArr[1];
             }
 
+            int enemyCoin = iniTool.ReadInt(devPath, enemyIni, enemy.Name, "金币", 0);
+
+            int myCoin = iniTool.ReadInt(groupPath, KnapsackIni, e.FromQQ.ToString(), "金币", 0);
+
             if (rNum <= enemy.Probability)
             {
                 string items = iniTool.IniReadValue(devPath, enemyIni, enemy.Name, "掉落物品");
-
-                int enemyCoin = iniTool.ReadInt(devPath, enemyIni, enemy.Name, "金币", 0);
 
                 string[] arr = items.Split('|');
 
@@ -191,8 +195,6 @@ namespace Native.Csharp.App.Manages
                 arr = arr[rNum].Split('*');
 
                 int item1 = iniTool.ReadInt(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[0], 0);
-
-                int myCoin = iniTool.ReadInt(groupPath, KnapsackIni, e.FromQQ.ToString(), "金币", 0);
 
                 iniTool.IniWriteValue(groupPath, KnapsackIni, e.FromQQ.ToString(), "金币", (myCoin + enemyCoin).ToString());
                 iniTool.IniWriteValue(groupPath, KnapsackIni, e.FromQQ.ToString(), arr[0], (int.Parse(arr[1]) + item1).ToString());
@@ -210,7 +212,9 @@ namespace Native.Csharp.App.Manages
 
             if (enemy.Certain == "")
             {
-                return null;
+                iniTool.IniWriteValue(groupPath, KnapsackIni, e.FromQQ.ToString(), "金币", (myCoin + enemyCoin).ToString());
+
+                return Environment.NewLine + "获得：金币*" + enemyCoin.ToString();
             }
 
             return res;

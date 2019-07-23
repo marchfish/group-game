@@ -110,21 +110,39 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            string item = iniTool.IniReadValue(devPath, missionIni, missionName, "背包");
+            string items = iniTool.IniReadValue(devPath, missionIni, missionName, "背包");
 
-            string[] items = item.Split('*');
+            string[] allItems = items.Split('|');
 
-            int myItemNum = GetKnapsackItemNum(items[0], groupPath, e.FromQQ.ToString());
+            // 判断是否有这么多物品
+            foreach (string allitem in allItems) {
 
-            if (myItemNum < int.Parse(items[1])) {
-                Common.CqApi.SendGroupMessage(e.FromGroup, "提交失败：您背包里没有任务需要的物品数量！");
-                return;
+                string[] aitems = allitem.Split('*');
+
+                int myItemNum = GetKnapsackItemNum(aitems[0], groupPath, e.FromQQ.ToString());
+
+                if (myItemNum < int.Parse(aitems[1]))
+                {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "提交失败：您背包里没有任务需要的物品数量！");
+                    return;
+                }
+
             }
 
-            if (!DeleteKnapsackItemNum(items[0], myItemNum, int.Parse(items[1]), groupPath, e.FromQQ.ToString())) {
-                Common.CqApi.SendGroupMessage(e.FromGroup, "提交失败：请重试！");
-                return;
-            };
+            // 删除任务物品
+            foreach (string allitem in allItems)
+            {
+                string[] aitems = allitem.Split('*');
+
+                int myItemNum = GetKnapsackItemNum(aitems[0], groupPath, e.FromQQ.ToString());
+
+                if (!DeleteKnapsackItemNum(aitems[0], myItemNum, int.Parse(aitems[1]), groupPath, e.FromQQ.ToString()))
+                {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "提交失败：请重试！");
+                    return;
+                };
+
+            }
 
             string reward = iniTool.IniReadValue(devPath, missionIni, missionName, "奖励");
             int exp = iniTool.ReadInt(devPath, missionIni, missionName, "经验", 0);

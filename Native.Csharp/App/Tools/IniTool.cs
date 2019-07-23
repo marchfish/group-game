@@ -173,9 +173,9 @@ namespace Tools
         {
             WritePrivateProfileString(null, null, null, this.m_FileName);
         }
-        public void DeleteAllSection(string filePath)
+        public void DeleteAllSection(string filePath, string iniName)
         {
-            WritePrivateProfileString(null, null, null, filePath);
+            WritePrivateProfileString(null, null, null, filePath + '\\' + iniName);
         }
         /// <summary>
         /// 读取指定 节-键 的值
