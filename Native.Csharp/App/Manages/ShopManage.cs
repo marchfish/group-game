@@ -18,12 +18,18 @@ namespace Native.Csharp.App.Manages
 
             string[] arr = e.Message.Split(' ');
 
+            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+
+            if (arr[0] == "商店")
+            {
+                Show(user.Pos, e);
+                return;
+            }
+
             if (arr.Length > 1)
             {
                 if (Int32.TryParse(arr[1], out int num))
                 {
-                    User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
-
                     if (arr[0] == "购买")
                     {
                         if (arr.Length > 2 && Int32.TryParse(arr[2], out int num1)) {
@@ -40,13 +46,27 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            List<string> items = iniTool.IniReadSectionKey(devPath, shopIni, "商城");
+            Show("商城", e);
 
-            string shopItems = "[物品商城]" + Environment.NewLine;
+            return;
+        }
+
+        private void Show(string shopName, CqGroupMessageEventArgs e) {
+
+            List<string> items = iniTool.IniReadSectionKey(devPath, shopIni, shopName);
+
+            if (items.Count == 0) {
+
+                Common.CqApi.SendGroupMessage(e.FromGroup, "该位置没有商品");
+
+                return;
+            }
+
+            string shopItems = "[" + shopName + "]" + Environment.NewLine;
 
             foreach (string item in items)
             {
-                string name = iniTool.IniReadValue(devPath, shopIni, "商城", item);
+                string name = iniTool.IniReadValue(devPath, shopIni, shopName, item);
 
                 string[] arrItem = name.Split('*');
 
@@ -62,14 +82,22 @@ namespace Native.Csharp.App.Manages
 
         private void Pay(string itemNo, int itemNum, string groupPath, User user, CqGroupMessageEventArgs e) {
 
-            string name = iniTool.IniReadValue(devPath, shopIni, "商城", itemNo);
+            string shopName = "商城";
+
+            string isShop = iniTool.IniReadValue(devPath, shopIni, user.Pos, "1");
+
+            if (isShop != "") {
+                shopName = user.Pos;
+            }
+
+            string name = iniTool.IniReadValue(devPath, shopIni, shopName, itemNo);
 
             if (name == "") {
                 Common.CqApi.SendGroupMessage(e.FromGroup, "购买失败：没有编号为"+ itemNo +"的物品!");
                 return;
             }
 
-            string itemInfo = iniTool.IniReadValue(devPath, shopIni, "商城", itemNo);
+            string itemInfo = iniTool.IniReadValue(devPath, shopIni, shopName, itemNo);
 
             string[] item = itemInfo.Split('*');
 
