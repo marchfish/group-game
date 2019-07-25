@@ -54,7 +54,7 @@ namespace Native.Csharp.App.Manages
                     return;
                 }
 
-                Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，没有找到：" + arr[1]);
+                Common.CqApi.SendGroupMessage(e.FromGroup, "不能查看：" + arr[1]);
 
                 return;
             }
