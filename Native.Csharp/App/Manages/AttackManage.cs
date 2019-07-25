@@ -93,37 +93,55 @@ namespace Native.Csharp.App.Manages
         // 战斗
         private string Fight(User user, Enemy enemy, CqGroupMessageEventArgs e, string groupPath) {
 
+            Random random = new Random();
+
             int enemyhurt = user.Agg - enemy.Defense;
 
             string res = "";
 
+            string isCrit = "";
+
             if (enemyhurt > 0)
             {
-                enemyhurt += Crit(user, enemyhurt);
+                int eDodge = random.Next(0, 100);
 
-                enemy.HP -= enemyhurt;
-
-                if (enemy.HP <= 0)
+                if (enemy.Level - user.Level > eDodge)
                 {
-                    res += enemy.Name + " 被 " + user.Name + " 击败了!";
-
-                    res += SetItem(enemy, e, groupPath);
-
-                    iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
-
-                    res += Environment.NewLine  + "经验增加：" + enemy.Exp.ToString() + Environment.NewLine;
-
-                    res += "当前血量：" + user.HP;
-
-                    Common.CqApi.SendGroupMessage(e.FromGroup, res);
-
-                    eventManage.OnEnemyDeath(user, enemy, groupPath, e);
-
-                    return "";
+                    res += user.Name + " 攻击 " + enemy.Name +  "-(闪避了)，" + enemy.Name + "的血量 剩余：" + enemy.HP + Environment.NewLine;
                 }
+                else { 
+
+                    int hurt1 = enemyhurt;
+
+                    enemyhurt += Crit(user, enemyhurt);
+
+                    if (enemyhurt > hurt1 + hurt1 * 0.25) {
+                        isCrit = "-(受到暴击伤害)";
+                    }
+
+                    enemy.HP -= enemyhurt;
+
+                    if (enemy.HP <= 0)
+                    {
+                        res += enemy.Name + " 被 " + user.Name + " 击败了!";
+
+                        res += SetItem(enemy, e, groupPath);
+
+                        iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
+
+                        res += Environment.NewLine  + "经验增加：" + enemy.Exp.ToString() + Environment.NewLine;
+
+                        res += "当前血量：" + user.HP;
+
+                        Common.CqApi.SendGroupMessage(e.FromGroup, res);
+
+                        eventManage.OnEnemyDeath(user, enemy, groupPath, e);
+
+                        return "";
+                    }
               
-                res += user.Name + " 攻击 " + enemy.Name + "，" + enemy.Name + "的血量 -" + enemyhurt + " 剩余：" + enemy.HP + Environment.NewLine;
-                
+                    res += user.Name + " 攻击 " + enemy.Name + isCrit + "，" + enemy.Name + "的血量 -" + enemyhurt + " 剩余：" + enemy.HP + Environment.NewLine;
+                }
             } else {
 
                 res += user.Name + " 攻击 " + enemy.Name + "，" + enemy.Name + "的血量 -" + 0 + " 剩余：" + enemy.HP + Environment.NewLine;
@@ -134,25 +152,34 @@ namespace Native.Csharp.App.Manages
 
             if (userhurt > 0) {
 
-                userhurt += Crit(user, userhurt, false);
+                int uDodge = random.Next(0, 100);
 
-                user.HP -= userhurt;
-
-                if (user.HP <= 0)
+                if (user.Dodge > uDodge)
                 {
-                    res += user.Name + " 被 " + enemy.Name + " 击败了!";
-                    iniTool.DeleteSection(devPath + "\\" + e.FromGroup.ToString(), fightIni, e.FromQQ.ToString());
-
-                    // 记录用户血量
-                    iniTool.WriteInt(groupPath, userInfoIni, e.FromQQ.ToString(), "血量", 0);
-
-                    Common.CqApi.SendGroupMessage(e.FromGroup, res);
-                    return "";
+                    res += enemy.Name + " 攻击 " + user.Name + "-(闪避了)，" + user.Name + "的血量 剩余：" + user.HP;
                 }
+                else
+                {
+                    userhurt += Crit(user, userhurt, false);
 
-                iniTool.WriteInt(groupPath, userInfoIni, e.FromQQ.ToString(), "血量", user.HP);
+                    user.HP -= userhurt;
 
-                res += enemy.Name + " 攻击 " + user.Name + "，" + user.Name + "的血量 -" + userhurt + " 剩余：" + user.HP;
+                    if (user.HP <= 0)
+                    {
+                        res += user.Name + " 被 " + enemy.Name + " 击败了!";
+                        iniTool.DeleteSection(devPath + "\\" + e.FromGroup.ToString(), fightIni, e.FromQQ.ToString());
+
+                        // 记录用户血量
+                        iniTool.WriteInt(groupPath, userInfoIni, e.FromQQ.ToString(), "血量", 0);
+
+                        Common.CqApi.SendGroupMessage(e.FromGroup, res);
+                        return "";
+                    }
+
+                    iniTool.WriteInt(groupPath, userInfoIni, e.FromQQ.ToString(), "血量", user.HP);
+
+                    res += enemy.Name + " 攻击 " + user.Name + "，" + user.Name + "的血量 -" + userhurt + " 剩余：" + user.HP;
+                }
 
             }
             else
