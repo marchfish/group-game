@@ -16,6 +16,7 @@
         public string Pos { get; set; }
         public int MaxHP { get; set; }
         public int MaxMP { get; set; }
+        public bool isShowMessage { get; set; }
 
         public void Add(string userInfo)
         {
