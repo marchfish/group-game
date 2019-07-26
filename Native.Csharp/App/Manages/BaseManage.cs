@@ -29,6 +29,7 @@ namespace Native.Csharp.App.Manages
         protected string reviveIni = "复活配置.ini";
         protected string recycleIni = "回收配置.ini";
         protected string businessIni = "拍卖行信息.ini";
+        protected string vipInfoIni = "会员信息.ini";
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
@@ -56,6 +57,8 @@ namespace Native.Csharp.App.Manages
             }
 
             user.Add(userInfo);
+
+            user.isShowMessage = true;
 
             return user;
         }
@@ -166,6 +169,29 @@ namespace Native.Csharp.App.Manages
             level.Add(levelInfo);
 
             return level;
+        }
+
+        // 获取Vip信息
+        protected Vip GetVipInfo(CqGroupMessageEventArgs e)
+        {
+            Vip vip = new Vip();
+
+            string vipInfo = "";
+
+            string time = iniTool.IniReadValue(devPath + "\\" + e.FromGroup, vipInfoIni, e.FromQQ.ToString(), "到期时间");
+
+            if (time == "") {
+                return vip;
+            }
+
+            foreach (string v in GameConfig.vipInfo)
+            {
+                vipInfo += iniTool.IniReadValue(devPath + "\\" + e.FromGroup, vipInfoIni, e.FromQQ.ToString(), v) + ",";
+            }
+
+            vip.Add(vipInfo);
+
+            return vip;
         }
 
         // 保存战斗信息

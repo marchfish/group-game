@@ -36,6 +36,8 @@ namespace Native.Csharp.App.Manages
         // 攻击事件
         private void Attack(string groupPath, CqGroupMessageEventArgs e, int num = 0) {
 
+            DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
             string res = "";
 
             User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
@@ -46,7 +48,6 @@ namespace Native.Csharp.App.Manages
                 return ;
             }
 
-
             string pos = iniTool.IniReadValue(groupPath, fightIni, e.FromQQ.ToString(), "当前位置");
 
             string enemyName = iniTool.IniReadValue(devPath, mapIni, user.Pos, "怪物");
@@ -55,6 +56,22 @@ namespace Native.Csharp.App.Manages
             {
                 return ;
             }
+
+            string lastTime = iniTool.IniReadValue(groupPath, userInfoIni, e.FromQQ.ToString(), "攻击时间");
+
+            if (lastTime != "")
+            {
+                DateTime lastTime1 = Convert.ToDateTime(lastTime);
+
+                TimeSpan timeSpan = nowTime.Subtract(lastTime1);
+
+                if (timeSpan.TotalSeconds < 16)
+                {
+                    user.isShowMessage = false;
+                }
+            }
+         
+            iniTool.IniWriteValue(groupPath, userInfoIni, e.FromQQ.ToString(), "攻击时间", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
             Enemy enemy = GetEnemy(enemyName);
 
@@ -86,8 +103,12 @@ namespace Native.Csharp.App.Manages
 
             AddFight(user, enemy, e.FromQQ.ToString(), e.FromGroup.ToString());
 
-            Common.CqApi.SendGroupMessage(e.FromGroup, res);
-  
+            // 添加超频判断
+            if (user.isShowMessage)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, res);
+            }
+
         }
 
         // 战斗
@@ -133,7 +154,10 @@ namespace Native.Csharp.App.Manages
 
                         res += "当前血量：" + user.HP;
 
-                        Common.CqApi.SendGroupMessage(e.FromGroup, res);
+                        if (user.isShowMessage)
+                        {
+                            Common.CqApi.SendGroupMessage(e.FromGroup, res);
+                        }
 
                         eventManage.OnEnemyDeath(user, enemy, groupPath, e);
 
@@ -172,7 +196,11 @@ namespace Native.Csharp.App.Manages
                         // 记录用户血量
                         iniTool.WriteInt(groupPath, userInfoIni, e.FromQQ.ToString(), "血量", 0);
 
-                        Common.CqApi.SendGroupMessage(e.FromGroup, res);
+                        if (user.isShowMessage)
+                        {
+                            Common.CqApi.SendGroupMessage(e.FromGroup, res);
+                        }
+
                         return "";
                     }
 

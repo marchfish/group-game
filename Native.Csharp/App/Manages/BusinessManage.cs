@@ -21,7 +21,7 @@ namespace Native.Csharp.App.Manages
 
             User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
 
-            string startTime = iniTool.IniReadValue(groupPath, businessIni, "时间", "内容");
+            string startTime = iniTool.IniReadValue(groupPath, businessIni, "时间", "内容"); 
 
             DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
 

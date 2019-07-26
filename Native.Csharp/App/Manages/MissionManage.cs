@@ -193,7 +193,19 @@ namespace Native.Csharp.App.Manages
 
             foreach (string item in items)
             {
-                missions += item + ": " + iniTool.IniReadValue(groupPath, missionHistoryIni, e.FromQQ.ToString(), item) + Environment.NewLine;
+                string res = iniTool.IniReadValue(groupPath, missionHistoryIni, e.FromQQ.ToString(), item);
+
+                if (res == "已完成") {
+                    string toName = iniTool.IniReadValue(devPath, missionIni, item, "属于");
+
+                    // 删除任务
+                    if (!user.Fame.Equals(toName)) {
+                        iniTool.DeleteSectionKey(groupPath, missionHistoryIni, e.FromQQ.ToString(), item);
+                        continue;
+                    }
+                }
+
+                missions += item + ": " + res + Environment.NewLine;
             }
 
             missions += "输入： 提交任务 任务名称";
