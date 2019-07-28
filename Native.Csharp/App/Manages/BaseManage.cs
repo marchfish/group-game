@@ -29,6 +29,7 @@ namespace Native.Csharp.App.Manages
         protected string reviveIni = "复活配置.ini";
         protected string recycleIni = "回收配置.ini";
         protected string businessIni = "拍卖行信息.ini";
+        protected string vipIni = "会员配置.ini";
         protected string vipInfoIni = "会员信息.ini";
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
@@ -46,7 +47,7 @@ namespace Native.Csharp.App.Manages
         }
 
         // 获取用户所有信息
-        protected User GetUser(string userId, string groupId)
+        protected User GetUser(string userId, string groupId, CqGroupMessageEventArgs e)
         {
             User user = new User();
 
@@ -59,6 +60,33 @@ namespace Native.Csharp.App.Manages
             user.Add(userInfo);
 
             user.isShowMessage = true;
+
+            // 获取vip信息
+            Vip vip = GetVipInfo(e);
+
+            if (vip.Level == 0)
+            {
+                vip = GetVipInfo(e, true);
+                SetVipInfo(vip, e);
+            }
+
+            DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            DateTime endTime = Convert.ToDateTime(vip.endTime);
+
+            int compNum = DateTime.Compare(nowTime, endTime);
+
+            if (compNum < 0) {
+                user.isVip = true;
+            }
+
+            if (vip.OnHookTime != "") {
+                user.isOnHook = true;
+            }
+
+            user.Protect = vip.Protect;
+
+            user.SuccessRate = vip.SuccessRate;
+
 
             return user;
         }
@@ -172,11 +200,29 @@ namespace Native.Csharp.App.Manages
         }
 
         // 获取Vip信息
-        protected Vip GetVipInfo(CqGroupMessageEventArgs e)
+        protected Vip GetVipInfo(CqGroupMessageEventArgs e, bool isInit = false)
         {
             Vip vip = new Vip();
 
             string vipInfo = "";
+
+            if (isInit) {
+
+                foreach (string v in GameConfig.vipInfo)
+                {
+                    vipInfo += iniTool.IniReadValue(devPath, vipIni, "初始值", v) + ",";
+                }
+
+                vip.Add(vipInfo);
+
+                DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+                DateTime dateTime = nowTime.AddMonths(int.Parse(vip.endTime));
+
+                vip.endTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+                return vip; 
+            }
 
             string time = iniTool.IniReadValue(devPath + "\\" + e.FromGroup, vipInfoIni, e.FromQQ.ToString(), "到期时间");
 
@@ -192,6 +238,22 @@ namespace Native.Csharp.App.Manages
             vip.Add(vipInfo);
 
             return vip;
+        }
+
+        // 设置Vip信息
+        protected void SetVipInfo(Vip vip, CqGroupMessageEventArgs e)
+        {
+            string groupPath = devPath + "\\" + e.FromGroup.ToString();
+
+            string userId = e.FromQQ.ToString();
+
+            iniTool.IniWriteValue(groupPath, vipInfoIni, userId, "等级", vip.Level.ToString());
+            iniTool.IniWriteValue(groupPath, vipInfoIni, userId, "到期时间", vip.endTime);
+            iniTool.IniWriteValue(groupPath, vipInfoIni, userId, "保护", vip.Protect.ToString());
+            iniTool.IniWriteValue(groupPath, vipInfoIni, userId, "成功率", vip.SuccessRate.ToString());
+            iniTool.IniWriteValue(groupPath, vipInfoIni, userId, "挂机时间", vip.OnHookTime);
+            iniTool.IniWriteValue(groupPath, vipInfoIni, userId, "挂机类型", vip.OnHookType);
+            iniTool.IniWriteValue(groupPath, vipInfoIni, userId, "次数", vip.Number.ToString());
         }
 
         // 保存战斗信息

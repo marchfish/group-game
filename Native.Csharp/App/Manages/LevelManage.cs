@@ -18,7 +18,7 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
 
             Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "] 您当前的等级为：" + user.Level);
 

@@ -40,7 +40,7 @@ namespace Native.Csharp.App.Manages
 
                     Equip equipInfo = GetEquip(arr[1]);
 
-                    User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+                    User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
 
                     if (equipInfo.Level > user.Level)
                     {

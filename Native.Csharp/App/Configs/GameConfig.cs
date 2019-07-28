@@ -26,6 +26,6 @@
         public static string[] level = { "攻击", "血量", "蓝量", "防御", "经验", "称号" };
 
         // 会员信息
-        public static string[] vipInfo = { "等级", "到期时间", "保护", "成功率", "次数"};
+        public static string[] vipInfo = { "等级", "到期时间", "保护", "成功率", "挂机时间", "挂机类型", "次数" };
     }
 }

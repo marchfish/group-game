@@ -40,12 +40,18 @@ namespace Native.Csharp.App.Manages
 
             string res = "";
 
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
 
             if (user.HP <= 0)
             {
                 Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您已死亡：请复活后继续!");
                 return ;
+            }
+
+            if (user.isOnHook)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您处于挂机中，请结束挂机后再试！");
+                return;
             }
 
             string pos = iniTool.IniReadValue(groupPath, fightIni, e.FromQQ.ToString(), "当前位置");
@@ -108,6 +114,13 @@ namespace Native.Csharp.App.Manages
             {
                 Common.CqApi.SendGroupMessage(e.FromGroup, res);
             }
+            else if (user.isVip)
+            {
+                if (user.HP < user.Protect)
+                {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "警告：您的血量小于 " + user.Protect);
+                }
+            }
 
         }
 
@@ -158,6 +171,12 @@ namespace Native.Csharp.App.Manages
                         {
                             Common.CqApi.SendGroupMessage(e.FromGroup, res);
                         }
+                        else if (user.isVip)
+                        {
+                            if (user.HP < user.Protect) {
+                                Common.CqApi.SendGroupMessage(e.FromGroup, "警告：您的血量小于 " + user.Protect);
+                            }
+                        }
 
                         eventManage.OnEnemyDeath(user, enemy, groupPath, e);
 
@@ -199,6 +218,13 @@ namespace Native.Csharp.App.Manages
                         if (user.isShowMessage)
                         {
                             Common.CqApi.SendGroupMessage(e.FromGroup, res);
+                        }
+                        else if (user.isVip)
+                        {
+                            if (user.HP < user.Protect)
+                            {
+                                Common.CqApi.SendGroupMessage(e.FromGroup, "警告：您的血量小于 " + user.Protect);
+                            }
                         }
 
                         return "";

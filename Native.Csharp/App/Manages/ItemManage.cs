@@ -19,7 +19,7 @@ namespace Native.Csharp.App.Manages
             }
 
             // 获取用户信息
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
 
             if (user.HP <= 0)
             {

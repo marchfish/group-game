@@ -16,7 +16,7 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
 
             string[] arr = e.Message.Split(' ');
 

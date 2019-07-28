@@ -19,7 +19,7 @@ namespace Native.Csharp.App.Manages
 
             string[] arr = e.Message.Split(' ');
 
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
 
             string startTime = iniTool.IniReadValue(groupPath, businessIni, "时间", "内容"); 
 
