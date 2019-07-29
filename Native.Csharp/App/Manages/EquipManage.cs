@@ -14,7 +14,7 @@ namespace Native.Csharp.App.Manages
 
         public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
-            string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
+            string userName = GetUserName(e.FromQQ.ToString(), groupPath);
 
             if (userName == "")
             {
@@ -40,7 +40,7 @@ namespace Native.Csharp.App.Manages
 
                     Equip equipInfo = GetEquip(arr[1]);
 
-                    User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
+                    User user = GetUser(e.FromQQ.ToString(), e, groupPath);
 
                     if (equipInfo.Level > user.Level)
                     {
@@ -104,10 +104,8 @@ namespace Native.Csharp.App.Manages
 
         }
 
-        public void AddUserEquip(string userId, string groupId)
+        public void AddUserEquip(string userId, string groupPath)
         {
-            string groupPath = devPath + "\\" + groupId;
-
             for (int i = 0; i < GameConfig.equipInfo.Length; i++)
             {
                 iniTool.IniWriteValue(groupPath, equipInfoIni, userId, GameConfig.equipInfo[i], GameConfig.equipDefault[i]);

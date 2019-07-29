@@ -50,7 +50,7 @@ namespace Native.Csharp.App.Manages
 
             foreach (string user in users)
             {
-                userInfo.Add(GetUser(user, e.FromGroup.ToString(), e));
+                userInfo.Add(GetUser(user, e, groupPath));
             }
 
             for (int i = 0; i < userInfo.Count; i++) {
@@ -146,7 +146,7 @@ namespace Native.Csharp.App.Manages
 
             foreach (string user in users)
             {
-                userInfo.Add(GetUser(user, e.FromGroup.ToString(), e));
+                userInfo.Add(GetUser(user, e, groupPath));
             }
 
             for (int i = 0; i < userInfo.Count; i++)

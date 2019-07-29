@@ -37,7 +37,7 @@ namespace Native.Csharp.App.Manages
 
 
             // 触发订阅
-            eventManage.OnRegisterUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+            eventManage.OnRegisterUser(e.FromQQ.ToString(), groupPath);
 
             // 发送消息(响应)
             Common.CqApi.SendGroupMessage(e.FromGroup, arr[1] +  " 注册成功，开始冒险吧！");

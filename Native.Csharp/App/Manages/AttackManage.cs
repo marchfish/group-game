@@ -9,7 +9,7 @@ namespace Native.Csharp.App.Manages
     {
         public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
-            string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
+            string userName = GetUserName(e.FromQQ.ToString(), groupPath);
 
             if (userName == "")
             {
@@ -40,7 +40,7 @@ namespace Native.Csharp.App.Manages
 
             string res = "";
 
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
+            User user = GetUser(e.FromQQ.ToString(), e, groupPath);
 
             if (user.HP <= 0)
             {
@@ -107,7 +107,7 @@ namespace Native.Csharp.App.Manages
                 return ;
             };
 
-            AddFight(user, enemy, e.FromQQ.ToString(), e.FromGroup.ToString());
+            AddFight(user, enemy, e.FromQQ.ToString(), groupPath);
 
             // 添加超频判断
             if (user.isShowMessage)
@@ -210,7 +210,7 @@ namespace Native.Csharp.App.Manages
                     if (user.HP <= 0)
                     {
                         res += user.Name + " 被 " + enemy.Name + " 击败了!";
-                        iniTool.DeleteSection(devPath + "\\" + e.FromGroup.ToString(), fightIni, e.FromQQ.ToString());
+                        iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
 
                         // 记录用户血量
                         iniTool.WriteInt(groupPath, userInfoIni, e.FromQQ.ToString(), "血量", 0);

@@ -13,7 +13,7 @@ namespace Native.Csharp.App.Manages
 
         public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
-            string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
+            string userName = GetUserName(e.FromQQ.ToString(), groupPath);
 
             if (userName == "")
             {
@@ -41,8 +41,7 @@ namespace Native.Csharp.App.Manages
             
         }
 
-        public void AddUserKnapsack(string userId, string groupId) {
-            string groupPath = devPath + "\\" + groupId;
+        public void AddUserKnapsack(string userId, string groupPath) {
             iniTool.IniWriteValue(groupPath, KnapsackIni, userId, "金币", "5000");
             iniTool.IniWriteValue(groupPath, KnapsackIni, userId, "木棍", "1");
         }

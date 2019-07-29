@@ -10,7 +10,7 @@ namespace Native.Csharp.App.Manages
     {
         public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
-            string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
+            string userName = GetUserName(e.FromQQ.ToString(), groupPath);
 
             // 用户验证
             if (userName == "")
@@ -19,7 +19,7 @@ namespace Native.Csharp.App.Manages
             }
 
             // 获取用户信息
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
+            User user = GetUser(e.FromQQ.ToString(), e, groupPath);
 
             if (user.HP <= 0)
             {
