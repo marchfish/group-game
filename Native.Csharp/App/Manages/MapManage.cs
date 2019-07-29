@@ -19,11 +19,17 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
 
             if (user.HP <= 0)
             {
                 Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您已死亡：请复活后继续!");
+                return;
+            }
+
+            if (user.isOnHook)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "对不起，您处于挂机中，请结束挂机后再试！");
                 return;
             }
 

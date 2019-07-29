@@ -15,7 +15,7 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString());
+            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
 
             if (user.HP > 0) {
                 Common.CqApi.SendGroupMessage(e.FromGroup, "您没有死亡！");

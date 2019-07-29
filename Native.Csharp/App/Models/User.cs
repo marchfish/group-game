@@ -17,6 +17,11 @@
         public int MaxHP { get; set; }
         public int MaxMP { get; set; }
         public bool isShowMessage { get; set; }
+        public bool isVip { get; set; }
+        public bool isOnHook { get; set; }
+        public int Protect { get; set; }
+        public int SuccessRate { get; set; }
+
 
         public void Add(string userInfo)
         {

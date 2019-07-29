@@ -7,6 +7,8 @@ namespace Native.Csharp.App.Models
         public string endTime { get; set; }
         public int Protect { get; set; }
         public int SuccessRate { get; set; }
+        public string OnHookTime { get; set; }
+        public string OnHookType { get; set; }
         public int Number { get; set; }
 
         public void Add(string userInfo)
@@ -16,7 +18,9 @@ namespace Native.Csharp.App.Models
             this.endTime = arr[1];
             this.Protect = int.Parse(arr[2]);
             this.SuccessRate = int.Parse(arr[3]);
-            this.Number = int.Parse(arr[4]);
+            this.OnHookTime = arr[4];
+            this.OnHookType = arr[5];
+            this.Number = int.Parse(arr[6]);
         }
     }
 }
