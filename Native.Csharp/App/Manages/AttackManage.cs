@@ -159,7 +159,7 @@ namespace Native.Csharp.App.Manages
                     {
                         res += enemy.Name + " 被 " + user.Name + " 击败了!";
 
-                        res += SetItem(enemy, e, groupPath);
+                        res += SetItem(enemy, e, user, groupPath);
 
                         iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
 
@@ -245,7 +245,7 @@ namespace Native.Csharp.App.Manages
         }
 
         //设置获得物品
-        private string SetItem(Enemy enemy, CqGroupMessageEventArgs e, string groupPath) {
+        private string SetItem(Enemy enemy, CqGroupMessageEventArgs e,User user, string groupPath) {
             Random random = new Random();
 
             int rNum = random.Next(0, 100);
@@ -286,6 +286,11 @@ namespace Native.Csharp.App.Manages
                 }
                 else {
                     res += "金币*" + enemyCoin.ToString() + ", " + arr[0] + "*" + arr[1];
+                }
+
+                if (!user.isShowMessage)
+                {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "获得：" + arr[0] + "*" + arr[1]);
                 }
 
                 return res;
