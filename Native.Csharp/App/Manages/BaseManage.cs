@@ -11,6 +11,7 @@ namespace Native.Csharp.App.Manages
         protected IniTool iniTool = Facade.facade.iniTool;
         protected string devPath = Facade.devPath;
         protected EventManage eventManage = Facade.facade.eventManage;
+        protected int pageSize = 10;
 
         // 现有的ini文件
         protected string userInfoIni = "用户信息.ini";
@@ -31,6 +32,7 @@ namespace Native.Csharp.App.Manages
         protected string businessIni = "拍卖行信息.ini";
         protected string vipIni = "会员配置.ini";
         protected string vipInfoIni = "会员信息.ini";
+        protected string warehouseIni = "仓库信息.ini";
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
