@@ -9,7 +9,7 @@ namespace Native.Csharp.App.Manages
     {
         public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
-            string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
+            string userName = GetUserName(e.FromQQ.ToString(), groupPath);
 
             if (userName == "")
             {
@@ -40,7 +40,7 @@ namespace Native.Csharp.App.Manages
 
             string res = "";
 
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
+            User user = GetUser(e.FromQQ.ToString(), e, groupPath);
 
             if (user.HP <= 0)
             {
@@ -107,7 +107,7 @@ namespace Native.Csharp.App.Manages
                 return ;
             };
 
-            AddFight(user, enemy, e.FromQQ.ToString(), e.FromGroup.ToString());
+            AddFight(user, enemy, e.FromQQ.ToString(), groupPath);
 
             // 添加超频判断
             if (user.isShowMessage)
@@ -159,7 +159,7 @@ namespace Native.Csharp.App.Manages
                     {
                         res += enemy.Name + " 被 " + user.Name + " 击败了!";
 
-                        res += SetItem(enemy, e, groupPath);
+                        res += SetItem(enemy, e, user, groupPath);
 
                         iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
 
@@ -210,7 +210,7 @@ namespace Native.Csharp.App.Manages
                     if (user.HP <= 0)
                     {
                         res += user.Name + " 被 " + enemy.Name + " 击败了!";
-                        iniTool.DeleteSection(devPath + "\\" + e.FromGroup.ToString(), fightIni, e.FromQQ.ToString());
+                        iniTool.DeleteSection(groupPath, fightIni, e.FromQQ.ToString());
 
                         // 记录用户血量
                         iniTool.WriteInt(groupPath, userInfoIni, e.FromQQ.ToString(), "血量", 0);
@@ -245,7 +245,7 @@ namespace Native.Csharp.App.Manages
         }
 
         //设置获得物品
-        private string SetItem(Enemy enemy, CqGroupMessageEventArgs e, string groupPath) {
+        private string SetItem(Enemy enemy, CqGroupMessageEventArgs e,User user, string groupPath) {
             Random random = new Random();
 
             int rNum = random.Next(0, 100);
@@ -286,6 +286,11 @@ namespace Native.Csharp.App.Manages
                 }
                 else {
                     res += "金币*" + enemyCoin.ToString() + ", " + arr[0] + "*" + arr[1];
+                }
+
+                if (!user.isShowMessage)
+                {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "获得：" + arr[0] + "*" + arr[1]);
                 }
 
                 return res;

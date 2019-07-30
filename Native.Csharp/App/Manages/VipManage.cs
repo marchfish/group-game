@@ -15,7 +15,7 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
+            User user = GetUser(e.FromQQ.ToString(), e, groupPath);
 
             string[] arr = e.Message.Split(' ');
 
@@ -43,7 +43,7 @@ namespace Native.Csharp.App.Manages
                 {
                     if (Int32.TryParse(arr[1], out int num))
                     {
-                        setOnHook(num, user, e);
+                        setOnHook(num, user, e, groupPath);
                         return;
                     }
                 }
@@ -75,7 +75,7 @@ namespace Native.Csharp.App.Manages
             if (arr[0] == "会员时间")
             {
 
-                Vip vip = GetVipInfo(e);
+                Vip vip = GetVipInfo(e, groupPath);
 
                 Common.CqApi.SendGroupMessage(e.FromGroup, "您的会员到期时间为：" + vip.endTime);
 
@@ -83,9 +83,9 @@ namespace Native.Csharp.App.Manages
             }
         }
 
-        private void setOnHook(int onHookType, User user, CqGroupMessageEventArgs e)
+        private void setOnHook(int onHookType, User user, CqGroupMessageEventArgs e, string groupPath)
         {
-            Vip vip = GetVipInfo(e);
+            Vip vip = GetVipInfo(e, groupPath);
 
             if (vip.OnHookTime != "")
             {
@@ -98,7 +98,7 @@ namespace Native.Csharp.App.Manages
             vip.OnHookTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             vip.OnHookType = type;
 
-            SetVipInfo(vip, e);
+            SetVipInfo(vip, e, groupPath);
 
             Common.CqApi.SendGroupMessage(e.FromGroup, "挂机成功，时间：" + vip.OnHookTime);
             return;
@@ -106,7 +106,7 @@ namespace Native.Csharp.App.Manages
 
         private void endOnHook(User user, CqGroupMessageEventArgs e, string groupPath)
         {
-            Vip vip = GetVipInfo(e);
+            Vip vip = GetVipInfo(e, groupPath);
 
             if (vip.OnHookTime == "")
             {
@@ -146,7 +146,7 @@ namespace Native.Csharp.App.Manages
             vip.OnHookTime = "";
             vip.OnHookType = "";
 
-            SetVipInfo(vip, e);
+            SetVipInfo(vip, e, groupPath);
 
             return;
         }
@@ -188,7 +188,7 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            Vip vip = GetVipInfo(e);
+            Vip vip = GetVipInfo(e, groupPath);
 
             DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             DateTime endTime = Convert.ToDateTime(vip.endTime);
@@ -205,7 +205,7 @@ namespace Native.Csharp.App.Manages
 
             vip.endTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
 
-            SetVipInfo(vip, e);
+            SetVipInfo(vip, e, groupPath);
 
             DeleteKnapsackItemNum("金币", coin, 50000, groupPath, e.FromQQ.ToString());
 

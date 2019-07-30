@@ -3,7 +3,7 @@ using Native.Csharp.App.Models;
 
 namespace Native.Csharp.App.Manages
 {
-    public delegate void RegisterUser(string userId, string groupId);
+    public delegate void RegisterUser(string userId, string groupPath);
     public delegate void UserUpEquip(User user, Equip equip, string groupPath, CqGroupMessageEventArgs e);
     public delegate void UserDownEquip(User user, Equip equip, string groupPath, string userId);
     public delegate void EnemyDeath(User user, Enemy enemy, string groupPath, CqGroupMessageEventArgs e);
@@ -20,9 +20,9 @@ namespace Native.Csharp.App.Manages
         public event Uplevel Uplevel;
 
         // 注册用户
-        public void OnRegisterUser(string userId, string groupId)
+        public void OnRegisterUser(string userId, string groupPath)
         {
-            RegisterUser?.Invoke(userId, groupId);
+            RegisterUser?.Invoke(userId, groupPath);
         }
 
         // 装备物品

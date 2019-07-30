@@ -35,9 +35,9 @@ namespace Native.Csharp.App.Manages
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
         // 判断是否是用户并获取用户名
-        protected string GetUserName(string userId, string groupId) {
+        protected string GetUserName(string userId, string groupPath) {
 
-            string userName = iniTool.IniReadValue(devPath +"\\" + groupId, userInfoIni, userId, "角色名");
+            string userName = iniTool.IniReadValue(groupPath, userInfoIni, userId, "角色名");
 
             if (userName != "" ) {
                 return userName;
@@ -47,14 +47,14 @@ namespace Native.Csharp.App.Manages
         }
 
         // 获取用户所有信息
-        protected User GetUser(string userId, string groupId, CqGroupMessageEventArgs e)
+        protected User GetUser(string userId, CqGroupMessageEventArgs e, string groupPath)
         {
             User user = new User();
 
             string userInfo = "";
 
             foreach (string name in GameConfig.userInfo) {
-                userInfo += iniTool.IniReadValue(devPath + "\\" + groupId, userInfoIni, userId, name) + ",";
+                userInfo += iniTool.IniReadValue(groupPath, userInfoIni, userId, name) + ",";
             }
 
             user.Add(userInfo);
@@ -62,12 +62,12 @@ namespace Native.Csharp.App.Manages
             user.isShowMessage = true;
 
             // 获取vip信息
-            Vip vip = GetVipInfo(e);
+            Vip vip = GetVipInfo(e, groupPath);
 
             if (vip.Level == 0)
             {
-                vip = GetVipInfo(e, true);
-                SetVipInfo(vip, e);
+                vip = GetVipInfo(e, groupPath, true);
+                SetVipInfo(vip, e, groupPath);
             }
 
             DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -200,7 +200,7 @@ namespace Native.Csharp.App.Manages
         }
 
         // 获取Vip信息
-        protected Vip GetVipInfo(CqGroupMessageEventArgs e, bool isInit = false)
+        protected Vip GetVipInfo(CqGroupMessageEventArgs e, string groupPath, bool isInit = false)
         {
             Vip vip = new Vip();
 
@@ -224,7 +224,7 @@ namespace Native.Csharp.App.Manages
                 return vip; 
             }
 
-            string time = iniTool.IniReadValue(devPath + "\\" + e.FromGroup, vipInfoIni, e.FromQQ.ToString(), "到期时间");
+            string time = iniTool.IniReadValue(groupPath, vipInfoIni, e.FromQQ.ToString(), "到期时间");
 
             if (time == "") {
                 return vip;
@@ -232,7 +232,7 @@ namespace Native.Csharp.App.Manages
 
             foreach (string v in GameConfig.vipInfo)
             {
-                vipInfo += iniTool.IniReadValue(devPath + "\\" + e.FromGroup, vipInfoIni, e.FromQQ.ToString(), v) + ",";
+                vipInfo += iniTool.IniReadValue(groupPath, vipInfoIni, e.FromQQ.ToString(), v) + ",";
             }
 
             vip.Add(vipInfo);
@@ -241,10 +241,8 @@ namespace Native.Csharp.App.Manages
         }
 
         // 设置Vip信息
-        protected void SetVipInfo(Vip vip, CqGroupMessageEventArgs e)
+        protected void SetVipInfo(Vip vip, CqGroupMessageEventArgs e, string groupPath)
         {
-            string groupPath = devPath + "\\" + e.FromGroup.ToString();
-
             string userId = e.FromQQ.ToString();
 
             iniTool.IniWriteValue(groupPath, vipInfoIni, userId, "等级", vip.Level.ToString());
@@ -257,12 +255,12 @@ namespace Native.Csharp.App.Manages
         }
 
         // 保存战斗信息
-        protected void AddFight(User user, Enemy enemy, string userId, string groupId)
+        protected void AddFight(User user, Enemy enemy, string userId, string groupPath)
         {
-            iniTool.IniWriteValue(devPath + "\\" + groupId, fightIni, userId, "角色名", user.Name);
-            iniTool.IniWriteValue(devPath + "\\" + groupId, fightIni, userId, "怪物", enemy.Name);
-            iniTool.IniWriteValue(devPath + "\\" + groupId, fightIni, userId, "怪物血量", enemy.HP.ToString());
-            iniTool.IniWriteValue(devPath + "\\" + groupId, fightIni, userId, "当前位置", user.Pos);
+            iniTool.IniWriteValue(groupPath, fightIni, userId, "角色名", user.Name);
+            iniTool.IniWriteValue(groupPath, fightIni, userId, "怪物", enemy.Name);
+            iniTool.IniWriteValue(groupPath, fightIni, userId, "怪物血量", enemy.HP.ToString());
+            iniTool.IniWriteValue(groupPath, fightIni, userId, "当前位置", user.Pos);
         }
 
         // 删除结尾换行符

@@ -10,7 +10,7 @@ namespace Native.Csharp.App.Manages
     {
         public override void Request(object sender, CqGroupMessageEventArgs e, string groupPath)
         {
-            string userName = GetUserName(e.FromQQ.ToString(), e.FromGroup.ToString());
+            string userName = GetUserName(e.FromQQ.ToString(), groupPath);
 
             if (userName == "")
             {
@@ -19,7 +19,7 @@ namespace Native.Csharp.App.Manages
 
             string[] arr = e.Message.Split(' ');
 
-            User user = GetUser(e.FromQQ.ToString(), e.FromGroup.ToString(), e);
+            User user = GetUser(e.FromQQ.ToString(), e, groupPath);
 
             string startTime = iniTool.IniReadValue(groupPath, businessIni, "时间", "内容"); 
 

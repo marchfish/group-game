@@ -42,6 +42,7 @@ namespace Native.Csharp.App.Manages
             managesDit.Add("拍卖行", new BusinessManage());
             managesDit.Add("查看", new FindManage());
             managesDit.Add("会员功能", new VipManage());
+            managesDit.Add("仓库", new WarehouseManage());
         }
 
         public void AddManage(String manageName, BaseManage manage)

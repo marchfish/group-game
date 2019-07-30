@@ -21,8 +21,17 @@ namespace Native.Csharp.App.Event
 
             BaseManage baseManage;
 
+            string groupId = e.FromGroup.ToString();
+
+            if (groupId.Equals("7829338")) {
+                groupId = "872042330";
+            }
+
+            string groupPath = Facade.devPath + "\\" + groupId;
+
+
             if (facade.managesDit.TryGetValue(arr[0], out baseManage)) {
-                baseManage.Request(sender, e, Facade.devPath + "\\" + e.FromGroup);
+                baseManage.Request(sender, e, groupPath);
                 return;
             }
 
@@ -35,7 +44,7 @@ namespace Native.Csharp.App.Event
 
             if (facade.managesDit.TryGetValue(action, out baseManage))
             {
-                baseManage.Request(sender, e, Facade.devPath + "\\" + e.FromGroup);
+                baseManage.Request(sender, e, groupPath);
                 return;
             }
 
