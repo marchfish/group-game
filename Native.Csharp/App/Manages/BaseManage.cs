@@ -2,6 +2,7 @@
 using Native.Csharp.App.EventArgs;
 using Native.Csharp.App.Models;
 using System;
+using System.Collections.Generic;
 using Tools;
 
 namespace Native.Csharp.App.Manages
@@ -263,6 +264,48 @@ namespace Native.Csharp.App.Manages
             iniTool.IniWriteValue(groupPath, fightIni, userId, "怪物", enemy.Name);
             iniTool.IniWriteValue(groupPath, fightIni, userId, "怪物血量", enemy.HP.ToString());
             iniTool.IniWriteValue(groupPath, fightIni, userId, "当前位置", user.Pos);
+        }
+
+        // 显示分页结果
+        protected void ShowPage(User user, CqGroupMessageEventArgs e, string groupPath, string iniName, int page = 1)
+        {
+            List<string> items = iniTool.IniReadSectionKey(groupPath, iniName, e.FromQQ.ToString());
+
+            int nowPage = (int)Math.Ceiling(Convert.ToDouble(items.Count) / Convert.ToDouble(pageSize));
+
+            page -= 1;
+
+            if (nowPage < page + 1)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "的" + iniName.Substring(0, 2) + "] ：" + "没有第 " + (page + 1).ToString() + "页");
+                return;
+            }
+
+            int startPage = page * pageSize;
+
+            if (page == 0)
+            {
+                startPage = 0;
+            }
+
+
+            string res = "[" + user.Name + "的" + iniName.Substring(0, 2) + "] 共" + nowPage + "页 当前页数：" + (page + 1).ToString() + Environment.NewLine;
+
+            for (int i = startPage; i < items.Count; i++)
+            {
+
+                if (i - startPage > 9)
+                {
+                    break;
+                }
+                string itemNum = iniTool.IniReadValue(groupPath, iniName, e.FromQQ.ToString(), items[i]);
+
+                res += items[i] + "：" + itemNum + Environment.NewLine;
+            }
+
+            Common.CqApi.SendGroupMessage(e.FromGroup, SubRN(res));
+            return;
+
         }
 
         // 删除结尾换行符
