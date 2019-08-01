@@ -134,29 +134,20 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            List<string> items = iniTool.IniReadSectionKey(groupPath, businessIni, "商品");
-
-            if (items.Count == 0)
+            if (arr.Length > 1)
             {
-                Common.CqApi.SendGroupMessage(e.FromGroup, "暂无物品上架");
-                return;
-            }
 
-            string res = "[拍卖行商品]" + Environment.NewLine;
+                if (Int32.TryParse(arr[1], out int num))
+                {
 
-            foreach (string item in items)
-            {
-                BusinessItem businessItem = GetBusinessItem(groupPath, item);
+                    ShowBusinessPage(user, e, groupPath, num);
 
-                res += item + "、" + businessItem.ItemName + "：" + businessItem.Coin + "金币" + Environment.NewLine;
-
-                res += "--出售者：" + businessItem.UserName + Environment.NewLine;
+                    return;
+                }
 
             }
 
-            res += "输入：购买商品 商品编号";
-
-            Common.CqApi.SendGroupMessage(e.FromGroup, res);
+            ShowBusinessPage(user, e, groupPath);
 
             return;
         }
@@ -333,5 +324,51 @@ namespace Native.Csharp.App.Manages
 
         }
 
+        // 显示拍卖行信息
+        private void ShowBusinessPage(User user, CqGroupMessageEventArgs e, string groupPath, int page = 1)
+        {
+            List<string> items = iniTool.IniReadSectionKey(groupPath, businessIni, "商品");
+
+            if (items.Count == 0)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "暂无物品上架");
+                return;
+            }
+
+            int nowPage = (int)Math.Ceiling(Convert.ToDouble(items.Count) / Convert.ToDouble(pageSize));
+
+            page -= 1;
+
+            if (nowPage < page + 1)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "[拍卖行商品] ：" + "第" + (page + 1).ToString() + "页 没有任何物品");
+                return;
+            }
+
+            int startPage = page * pageSize;
+
+            string res = "[拍卖行商品] 共" + nowPage + "页 当前页数：" + (page + 1).ToString() + Environment.NewLine;
+
+            for (int i = startPage; i < items.Count; i++)
+            {
+
+                if (i - startPage > 9)
+                {
+                    break;
+                }
+
+                BusinessItem businessItem = GetBusinessItem(groupPath, (i+1).ToString());
+
+                res += (i + 1).ToString() + "、" + businessItem.ItemName + "：" + businessItem.Coin + "金币" + Environment.NewLine;
+
+                res += "--出售者：" + businessItem.UserName + Environment.NewLine;
+            }
+
+            res += "输入：购买商品 商品编号";
+
+            Common.CqApi.SendGroupMessage(e.FromGroup, res);
+
+            return;
+        }
     }
 }
