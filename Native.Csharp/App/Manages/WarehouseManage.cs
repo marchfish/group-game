@@ -50,65 +50,64 @@ namespace Native.Csharp.App.Manages
                 }
             }
 
+            if (arr[0] == "取")
+            {
+                if (arr.Length > 1)
+                {
+                    int wItemNum = GetWarehouseItemNum(arr[1], groupPath, e.FromQQ.ToString());
+
+                    if (wItemNum == 0)
+                    {
+                        Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "] ：" + "取出失败：您仓库中没有物品 " + arr[1]);
+                        return;
+                    }
+
+                    int useNum = wItemNum;
+
+                    if (arr.Length > 2)
+                    {
+                        if (Int32.TryParse(arr[2], out int num))
+                        {
+                            if (wItemNum < num)
+                            {
+                                Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "] ：" + "取出失败：您仓库中没有足够的数量 " + arr[1]);
+                                return;
+                            }
+                            useNum = num;
+                        }
+                    }
+
+                    SetKnapsackItemNum(arr[1], useNum, groupPath, e.FromQQ.ToString());
+
+                    DeleteWarehouseItemNum(arr[1], wItemNum, useNum, groupPath, e.FromQQ.ToString());
+
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "] ：" + "取出成功：" + arr[1] + "*" + useNum.ToString());
+
+                    return;
+                }
+            }
+
             if (arr.Length > 1) {
               
                 if (Int32.TryParse(arr[1], out int num))
                 {
 
-                    ShowWarehouse(user, e, groupPath, num);
+                    ShowPage(user, e, groupPath, warehouseIni, num);
 
                     return;
                 }
 
             }
 
-            ShowWarehouse(user, e, groupPath);
+            ShowPage(user, e, groupPath, warehouseIni);
         }
 
-        private void ShowWarehouse(User user, CqGroupMessageEventArgs e, string groupPath, int page = 1)
+        private void GetWarehouse(User user, CqGroupMessageEventArgs e, string groupPath, string itemName, int useNum)
         {
-            List<string> items = iniTool.IniReadSectionKey(groupPath, warehouseIni, e.FromQQ.ToString());
-
-            int nowPage = (int)Math.Ceiling(Convert.ToDouble(items.Count) / Convert.ToDouble(pageSize));
-
-            page -= 1;
-
-            if (nowPage < page+1 ) {
-                Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "] ：" + "没有第 " + (page+1).ToString() + "页");
-                return ;
-            }
-
-            int startPage = page * pageSize;
-
-            if (page == 0) {
-                startPage = 0; 
-            }
-
-
-            string res = "[" + user.Name + "] 共" + nowPage + "页 当前页数：" + (page + 1).ToString() + Environment.NewLine;
-
-            for (int i = startPage; i < items.Count; i++ ) {
-
-                if (i - startPage > 9) {
-                    break ;
-                }
-                string itemNum = iniTool.IniReadValue(groupPath, warehouseIni, e.FromQQ.ToString(), items[i]);
-
-                res += items[i] + "：" + itemNum + Environment.NewLine;
-            }
-
-            res += "输入：仓库 2";
-
-            Common.CqApi.SendGroupMessage(e.FromGroup, res);
-            return;
-
+            
         }
 
-        private void GetWarehouse(User user, CqGroupMessageEventArgs e, string groupPath)
-        {
-             
-        }
-
+        // 存储物品
         private void SetWarehouse(User user, CqGroupMessageEventArgs e, string groupPath, string itemName ,int nowItemNum, int useNum = 1)
         {
             int myItem = iniTool.ReadInt(groupPath, warehouseIni, e.FromQQ.ToString(), itemName, 0);
@@ -118,6 +117,32 @@ namespace Native.Csharp.App.Manages
             DeleteKnapsackItemNum(itemName, nowItemNum, useNum, groupPath, e.FromQQ.ToString());
 
             Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "] ：" + "成功存入 " + itemName + "*" + useNum.ToString());
+        }
+
+        // 判断是否有该物品并返回数量 
+        private int GetWarehouseItemNum(string itemName, string groupPath, string userId)
+        {
+            return iniTool.ReadInt(groupPath, warehouseIni, userId, itemName, 0);
+        }
+
+        // 使用（减少）新更物品数量
+        private bool DeleteWarehouseItemNum(string itemName, int nowNum, int useNum, string groupPath, string userId)
+        {
+            if (useNum > nowNum)
+            {
+                return false;
+            }
+
+            if (nowNum == useNum)
+            {
+                iniTool.DeleteSectionKey(groupPath, warehouseIni, userId, itemName);
+            }
+            else
+            {
+                iniTool.WriteInt(groupPath, warehouseIni, userId, itemName, nowNum - useNum);
+            }
+
+            return true;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Native.Csharp.App.EventArgs;
+using Native.Csharp.App.Models;
 
 namespace Native.Csharp.App.Manages
 {
@@ -20,25 +21,26 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            string userKnapsack = "[" + userName + "]" + Environment.NewLine;
+            User user = GetUser(e.FromQQ.ToString(), e, groupPath);
 
-            List<string> items = iniTool.IniReadSectionKey(groupPath, KnapsackIni, e.FromQQ.ToString());
+            string[] arr = e.Message.Split(' ');
 
-            foreach (string item in items)
+            if (arr.Length > 1)
             {
-                string res = iniTool.IniReadValue(groupPath, KnapsackIni, e.FromQQ.ToString(), item);
 
-                if (res != "")
+                if (Int32.TryParse(arr[1], out int num))
                 {
-                    userKnapsack += item + "：" + res + Environment.NewLine;
+
+                    ShowPage(user, e, groupPath, KnapsackIni, num);
+
+                    return;
                 }
+
             }
 
-            userKnapsack = SubRN(userKnapsack);
+            ShowPage(user, e, groupPath, KnapsackIni);
 
-            Common.CqApi.SendGroupMessage(e.FromGroup, userKnapsack);
             return;
-            
         }
 
         public void AddUserKnapsack(string userId, string groupPath) {
