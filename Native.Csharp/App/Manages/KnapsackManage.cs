@@ -46,6 +46,7 @@ namespace Native.Csharp.App.Manages
         public void AddUserKnapsack(string userId, string groupPath) {
             iniTool.IniWriteValue(groupPath, KnapsackIni, userId, "金币", "5000");
             iniTool.IniWriteValue(groupPath, KnapsackIni, userId, "木棍", "1");
+            iniTool.IniWriteValue(groupPath, KnapsackIni, userId, "清河城传送卷", "1");
         }
     }
 }

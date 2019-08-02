@@ -277,17 +277,11 @@ namespace Native.Csharp.App.Manages
 
             if (nowPage < page + 1)
             {
-                Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "的" + iniName.Substring(0, 2) + "] ：" + "没有第 " + (page + 1).ToString() + "页");
+                Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "的" + iniName.Substring(0, 2) + "] ：" + "第" + (page + 1).ToString() + "页 没有任何物品");
                 return;
             }
 
             int startPage = page * pageSize;
-
-            if (page == 0)
-            {
-                startPage = 0;
-            }
-
 
             string res = "[" + user.Name + "的" + iniName.Substring(0, 2) + "] 共" + nowPage + "页 当前页数：" + (page + 1).ToString() + Environment.NewLine;
 
