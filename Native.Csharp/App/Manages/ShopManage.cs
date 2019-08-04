@@ -86,8 +86,16 @@ namespace Native.Csharp.App.Manages
 
             string isShop = iniTool.IniReadValue(devPath, shopIni, user.Pos, "1");
 
-            if (isShop != "") {
+            if (isShop != "")
+            {
                 shopName = user.Pos;
+            }
+            else {
+                if (!user.isVip)
+                {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "] ：" + "您不是会员！请先购买会员");
+                    return;
+                }
             }
 
             string name = iniTool.IniReadValue(devPath, shopIni, shopName, itemNo);

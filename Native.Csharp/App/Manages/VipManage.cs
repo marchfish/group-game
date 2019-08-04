@@ -118,6 +118,11 @@ namespace Native.Csharp.App.Manages
 
             DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
+            if (!user.isVip)
+            {
+                nowTime = Convert.ToDateTime(vip.endTime);
+            }
+
             TimeSpan timeSpan = nowTime.Subtract(startTime);
 
             int mTime = (int)Math.Round( timeSpan.TotalMinutes );

@@ -22,6 +22,13 @@ namespace Native.Csharp.App.Manages
             string[] arr = e.Message.Split(' ');
 
             if (arr[0] == "存") {
+
+                if (!user.isVip)
+                {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "] ：" + "您不是会员！请先购买会员");
+                    return;
+                }
+
                 if (arr.Length > 1)
                 {
                     int myItemNum = GetKnapsackItemNum(arr[1], groupPath, e.FromQQ.ToString());
