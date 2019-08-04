@@ -12,6 +12,7 @@ namespace Native.Csharp.App.Manages
         protected IniTool iniTool = Facade.facade.iniTool;
         protected string devPath = Facade.devPath;
         protected EventManage eventManage = Facade.facade.eventManage;
+        protected Random random = new Random();
         protected int pageSize = 10;
 
         // 现有的ini文件
@@ -34,6 +35,7 @@ namespace Native.Csharp.App.Manages
         protected string vipIni = "会员配置.ini";
         protected string vipInfoIni = "会员信息.ini";
         protected string warehouseIni = "仓库信息.ini";
+        protected string synthesisIni = "合成配置.ini";
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
@@ -42,7 +44,7 @@ namespace Native.Csharp.App.Manages
 
             string userName = iniTool.IniReadValue(groupPath, userInfoIni, userId, "角色名");
 
-            if (userName != "" ) {
+            if (userName != "") {
                 return userName;
             }
 
@@ -133,12 +135,12 @@ namespace Native.Csharp.App.Manages
         }
 
         // 判断背包中是否有该物品并返回数量 
-        protected int GetKnapsackItemNum( string itemName, string groupPath, string userId) {
+        protected int GetKnapsackItemNum(string itemName, string groupPath, string userId) {
             return iniTool.ReadInt(groupPath, KnapsackIni, userId, itemName, 0);
         }
 
         // 使用（减少）新更背包中的物品数量
-        protected bool DeleteKnapsackItemNum(string itemName,int nowNum, int useNum, string groupPath, string userId)
+        protected bool DeleteKnapsackItemNum(string itemName, int nowNum, int useNum, string groupPath, string userId)
         {
             if (useNum > nowNum) {
                 return false;
@@ -162,7 +164,7 @@ namespace Native.Csharp.App.Manages
             int itemNum = GetKnapsackItemNum(itemName, groupPath, userId);
 
             iniTool.WriteInt(groupPath, KnapsackIni, userId, itemName, itemNum + setNum);
-           
+
             return true;
         }
 
@@ -224,7 +226,7 @@ namespace Native.Csharp.App.Manages
 
                 vip.endTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
 
-                return vip; 
+                return vip;
             }
 
             string time = iniTool.IniReadValue(groupPath, vipInfoIni, e.FromQQ.ToString(), "到期时间");
@@ -300,6 +302,66 @@ namespace Native.Csharp.App.Manages
             Common.CqApi.SendGroupMessage(e.FromGroup, SubRN(res));
             return;
 
+        }
+
+        // 批量判断背包里是否有足够的物品
+        protected bool IsExistenceItems(User user, CqGroupMessageEventArgs e, string groupPath, string[] allItems)
+        {
+            // 判断是否有这么多物品
+            foreach (string allitem in allItems)
+            {
+                string[] aitems = allitem.Split('*');
+
+                int myItemNum = GetKnapsackItemNum(aitems[0], groupPath, e.FromQQ.ToString());
+
+                if (myItemNum < int.Parse(aitems[1]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // 批量删除背包里的物品
+        protected bool DeleteKnapsackItems(User user, CqGroupMessageEventArgs e, string groupPath, string[] allItems, string unDeleteitemName = null) {
+
+            // 删除任务物品
+            foreach (string allitem in allItems)
+            {
+                string[] aitems = allitem.Split('*');
+
+                if (unDeleteitemName != null) {
+
+                    string[] unAitem = unDeleteitemName.Split('*');
+
+                    if (aitems[0].Equals(unAitem[0])) {
+                        continue;
+                    }
+                }
+
+                int myItemNum = GetKnapsackItemNum(aitems[0], groupPath, e.FromQQ.ToString());
+
+                if (!DeleteKnapsackItemNum(aitems[0], myItemNum, int.Parse(aitems[1]), groupPath, e.FromQQ.ToString()))
+                {
+                    return false;
+                };
+
+            }
+
+            return true;
+        }
+
+        // 判断是否成功
+        protected bool IsSuccess(int num)
+        {
+            int r = random.Next(0, 100);
+
+            if (r > num)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         // 删除结尾换行符

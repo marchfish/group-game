@@ -172,6 +172,7 @@
     <Compile Include="App\Manages\RegisterManage.cs" />
     <Compile Include="App\Manages\ReviveManage.cs" />
     <Compile Include="App\Manages\ShopManage.cs" />
+    <Compile Include="App\Manages\SynthesisManage.cs" />
     <Compile Include="App\Manages\UserInfoManage.cs" />
     <Compile Include="App\Manages\VipManage.cs" />
     <Compile Include="App\Manages\WarehouseManage.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="App\Models\Equip.cs" />
     <Compile Include="App\Models\Level.cs" />
     <Compile Include="App\Models\RecoveryItem.cs" />
+    <Compile Include="App\Models\Synthesis.cs" />
     <Compile Include="App\Models\User.cs" />
     <Compile Include="App\Models\Vip.cs" />
     <Compile Include="App\Tools\IniTool.cs" />

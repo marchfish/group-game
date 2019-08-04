@@ -29,6 +29,8 @@ namespace Native.Csharp.App.Manages
         // 等级提升
         public void Uplevel(User user, string groupPath, CqGroupMessageEventArgs e)
         {
+            int count = 1;
+
             while (true) {
 
                 Level nextlevel = GetLevel(user.Level + 1);
@@ -51,12 +53,16 @@ namespace Native.Csharp.App.Manages
 
                     SetUser(user, groupPath, e.FromQQ.ToString());
 
-                    Common.CqApi.SendGroupMessage(e.FromGroup, "恭喜您等级提升为：" + user.Level);
-
                     eventManage.OnUplevel(user, groupPath, e);
+
+                    count++;
                 }
                 else
                 {
+                    if (count>1) {
+                        Common.CqApi.SendGroupMessage(e.FromGroup, "恭喜您等级提升为：" + user.Level);
+                    }
+
                     break;
                 }
 

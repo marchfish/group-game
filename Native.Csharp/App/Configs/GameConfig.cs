@@ -27,5 +27,8 @@
 
         // 会员信息
         public static string[] vipInfo = { "等级", "到期时间", "保护", "成功率", "挂机时间", "挂机类型", "次数" };
+
+        // 合成配置
+        public static string[] synthesis = { "合成材料", "成功率", "失败保留"};
     }
 }

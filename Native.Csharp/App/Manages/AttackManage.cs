@@ -71,7 +71,7 @@ namespace Native.Csharp.App.Manages
 
                 TimeSpan timeSpan = nowTime.Subtract(lastTime1);
 
-                if (timeSpan.TotalSeconds < 16)
+                if (timeSpan.TotalSeconds < 21)
                 {
                     user.isShowMessage = false;
                 }
@@ -118,7 +118,7 @@ namespace Native.Csharp.App.Manages
             {
                 if (user.HP < user.Protect)
                 {
-                    Common.CqApi.SendGroupMessage(e.FromGroup, "警告：您的血量小于 " + user.Protect);
+                    Common.CqApi.SendGroupMessage(e.FromGroup,"[" + user.Name + "] " + "警告：您的血量小于 " + user.Protect);
                 }
             }
 
@@ -126,8 +126,6 @@ namespace Native.Csharp.App.Manages
 
         // 战斗
         private string Fight(User user, Enemy enemy, CqGroupMessageEventArgs e, string groupPath) {
-
-            Random random = new Random();
 
             int enemyhurt = user.Agg - enemy.Defense;
 
@@ -246,7 +244,6 @@ namespace Native.Csharp.App.Manages
 
         //设置获得物品
         private string SetItem(Enemy enemy, CqGroupMessageEventArgs e,User user, string groupPath) {
-            Random random = new Random();
 
             int rNum = random.Next(0, 100);
 
@@ -307,8 +304,6 @@ namespace Native.Csharp.App.Manages
         }
 
         private int Crit(User user, int hurt, bool isUser = true) {
-
-            Random random = new Random();
 
             int rNum = random.Next(0, 100);
 
