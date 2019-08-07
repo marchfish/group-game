@@ -36,6 +36,7 @@ namespace Native.Csharp.App.Manages
         protected string vipInfoIni = "会员信息.ini";
         protected string warehouseIni = "仓库信息.ini";
         protected string synthesisIni = "合成配置.ini";
+        protected string dateTimeIni = "时间信息.ini";
 
         public abstract void Request(object sender, CqGroupMessageEventArgs e, string groupPath);
 
