@@ -30,6 +30,20 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
+            if (arr[0] == "防御排行")
+            {
+                string panks = "[防御排行]" + Environment.NewLine;
+
+                panks += iniTool.IniReadValue(groupPath, panksIni, "防御排行", "内容");
+
+                if (panks == "")
+                {
+                    Common.CqApi.SendGroupMessage(e.FromGroup, "暂无排行");
+                }
+                Common.CqApi.SendGroupMessage(e.FromGroup, System.Text.RegularExpressions.Regex.Unescape(panks));
+                return;
+            }
+
             string levelpanks = "[等级排行]" + Environment.NewLine ;
 
             levelpanks += iniTool.IniReadValue(groupPath, panksIni, "排行", "内容");
@@ -135,6 +149,47 @@ namespace Native.Csharp.App.Manages
 
             iniTool.IniWriteValue(groupPath, panksIni, "攻击排行", "内容", panks);
 
+
+            for (int i = 0; i < userInfo.Count; i++)
+            {
+
+                for (int j = i + 1; j < userInfo.Count; j++)
+                {
+
+                    if (userInfo[i].Defense < userInfo[j].Defense)
+                    {
+                        User temp = userInfo[i];
+
+                        userInfo[i] = userInfo[j];
+
+                        userInfo[j] = temp;
+
+                    }
+
+                }
+
+            }
+
+            count = 1;
+
+            panks = "";
+
+            foreach (User u in userInfo)
+            {
+                if (count > 10)
+                {
+                    break;
+                }
+
+                panks += u.Name + "：" + u.Defense + "\\r\\n";
+
+                count++;
+            }
+
+            panks += "注：前十名";
+
+            iniTool.IniWriteValue(groupPath, panksIni, "防御排行", "内容", panks);
+
             return ;
         }
 
@@ -210,6 +265,48 @@ namespace Native.Csharp.App.Manages
             panks += "注：前十名";
 
             iniTool.IniWriteValue(groupPath, panksIni, "攻击排行", "内容", panks);
+
+            iniTool.DeleteSection(groupPath, panksIni, "防御排行");
+
+            for (int i = 0; i < userInfo.Count; i++)
+            {
+
+                for (int j = i + 1; j < userInfo.Count; j++)
+                {
+
+                    if (userInfo[i].Defense < userInfo[j].Defense)
+                    {
+                        User temp = userInfo[i];
+
+                        userInfo[i] = userInfo[j];
+
+                        userInfo[j] = temp;
+
+                    }
+
+                }
+
+            }
+
+            count = 1;
+
+            panks = "";
+
+            foreach (User u in userInfo)
+            {
+                if (count > 10)
+                {
+                    break;
+                }
+
+                panks += u.Name + "：" + u.Defense + "\\r\\n";
+
+                count++;
+            }
+
+            panks += "注：前十名";
+
+            iniTool.IniWriteValue(groupPath, panksIni, "防御排行", "内容", panks);
 
             return;
         }
