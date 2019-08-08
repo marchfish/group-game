@@ -35,6 +35,13 @@ namespace Native.Csharp.App.Manages
 
                 if (arr.Length > 2)
                 {
+                    string isCd = IsCD(user, e, groupPath);
+
+                    if (isCd != "") {
+                        Common.CqApi.SendGroupMessage(e.FromGroup, "出售冷却时间：" + isCd);
+                        return;
+                    }
+
                     if (arr[1] == "金币") {
                         Common.CqApi.SendGroupMessage(e.FromGroup, "金币无法出售!");
                         return;
@@ -42,6 +49,13 @@ namespace Native.Csharp.App.Manages
 
                     if (Int32.TryParse(arr[2], out int num))
                     {
+                        int sellNum = 1;
+
+                        if (arr.Length > 3 && Int32.TryParse(arr[3], out int itemNum))
+                        {
+                            sellNum = itemNum;
+                        }
+
                         if (num > 90000000)
                         {
                             Common.CqApi.SendGroupMessage(e.FromGroup, "您出售的价格过高!");
@@ -56,15 +70,17 @@ namespace Native.Csharp.App.Manages
 
                         int myItem = GetKnapsackItemNum(arr[1], groupPath, e.FromQQ.ToString());
 
-                        if (myItem == 0)
+                        if (myItem < sellNum)
                         {
-                            Common.CqApi.SendGroupMessage(e.FromGroup, "您没有该物品：" + arr[1]);
+                            Common.CqApi.SendGroupMessage(e.FromGroup, "物品的数量不足：" + arr[1]);
                             return;
                         }
 
-                        DeleteKnapsackItemNum(arr[1], myItem, 1, groupPath, e.FromQQ.ToString());
+                        DeleteKnapsackItemNum(arr[1], myItem, sellNum, groupPath, e.FromQQ.ToString());
 
-                        Sell(arr[1], arr[2], groupPath, user, e);
+                        Sell(arr[1], num, sellNum, groupPath, user, e);
+
+                        iniTool.IniWriteValue(groupPath, dateTimeIni, e.FromQQ.ToString(), "出售时间", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
                         Common.CqApi.SendGroupMessage(e.FromGroup, "物品成功上架：" + arr[1]);
 
@@ -178,13 +194,13 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            SetKnapsackItemNum(businessItem.ItemName, 1, groupPath, e.FromQQ.ToString());
+            SetKnapsackItemNum(businessItem.ItemName, businessItem.Num, groupPath, e.FromQQ.ToString());
 
             DeleteKnapsackItemNum("金币", myCoin, useCoin, groupPath, e.FromQQ.ToString());
 
             DeleteItem(businessItem, groupPath);
 
-            Common.CqApi.SendGroupMessage(e.FromGroup, "购买成功：" + businessItem.ItemName + ", -" + useCoin + "金币");
+            Common.CqApi.SendGroupMessage(e.FromGroup, "购买成功：" + businessItem.ItemName + "*" + businessItem.Num.ToString() + ", -" + useCoin + "金币");
 
             UpdateItem(groupPath);
 
@@ -192,13 +208,13 @@ namespace Native.Csharp.App.Manages
         }
 
 
-        private void Sell(string itemName, string coin, string groupPath, User user, CqGroupMessageEventArgs e)
+        private void Sell(string itemName, int coin, int sellNum, string groupPath, User user, CqGroupMessageEventArgs e)
         {
             Random random = new Random();
 
             int rNum = random.Next(1000, 10000);
 
-            string val = itemName + "|" + coin + "|" + user.Name + "|" + e.FromQQ.ToString();
+            string val = itemName + "*" + sellNum.ToString() + "|" + coin * sellNum + "|" + user.Name + "|" + e.FromQQ.ToString();
 
             iniTool.IniWriteValue(groupPath, businessIni, "商品", rNum.ToString(), val);
 
@@ -229,7 +245,7 @@ namespace Native.Csharp.App.Manages
 
             foreach (BusinessItem item in businessItemlist)
             {
-                string val = item.ItemName + "|" + item.Coin + "|" + item.UserName + "|" + item.UserId;
+                string val = item.ItemName + "*" + item.Num.ToString() + "|" + item.Coin + "|" + item.UserName + "|" + item.UserId;
 
                 iniTool.IniWriteValue(groupPath, businessIni, "商品", item.No, val);
             }
@@ -237,7 +253,9 @@ namespace Native.Csharp.App.Manages
 
         private void DeleteItem(BusinessItem businessItem, string groupPath)
         {
-            int coin = (int) Math.Round(businessItem.Coin - businessItem.Coin * 0.1);
+            int totalNum = businessItem.Coin;
+
+            int coin = (int) Math.Round(totalNum - totalNum * 0.1);
 
             SetKnapsackItemNum("金币", coin, groupPath, businessItem.UserId);
 
@@ -267,7 +285,7 @@ namespace Native.Csharp.App.Manages
 
             foreach (BusinessItem item in businessItemlist)
             {
-                SetKnapsackItemNum(item.ItemName, 1, groupPath, item.UserId);
+                SetKnapsackItemNum(item.ItemName, item.Num, groupPath, item.UserId);
             }
 
             iniTool.DeleteSection(groupPath, businessIni, "商品");
@@ -312,7 +330,7 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
-            SetKnapsackItemNum(businessItem.ItemName, 1, groupPath, e.FromQQ.ToString());
+            SetKnapsackItemNum(businessItem.ItemName, businessItem.Num, groupPath, e.FromQQ.ToString());
 
             iniTool.DeleteSectionKey(groupPath, businessIni, "商品", businessItem.No);
 
@@ -359,7 +377,7 @@ namespace Native.Csharp.App.Manages
 
                 BusinessItem businessItem = GetBusinessItem(groupPath, (i+1).ToString());
 
-                res += (i + 1).ToString() + "、" + businessItem.ItemName + "：" + businessItem.Coin + "金币" + Environment.NewLine;
+                res += (i + 1).ToString() + "、" + businessItem.ItemName + "*" + businessItem.Num.ToString() + "：" + businessItem.Coin + "金币" + Environment.NewLine;
 
                 res += "--出售者：" + businessItem.UserName + Environment.NewLine;
             }
@@ -369,6 +387,27 @@ namespace Native.Csharp.App.Manages
             Common.CqApi.SendGroupMessage(e.FromGroup, res);
 
             return;
+        }
+
+        // 是否在冷却中
+        private string IsCD(User user, CqGroupMessageEventArgs e, string groupPath) {
+            DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            string sellTime =  iniTool.IniReadValue(groupPath, dateTimeIni, e.FromQQ.ToString(), "出售时间");
+
+            if (sellTime != "")
+            {
+                DateTime sellTime1 = Convert.ToDateTime(sellTime);
+
+                TimeSpan timeSpan = nowTime.Subtract(sellTime1);
+
+                if (timeSpan.TotalSeconds < 60)
+                {
+                   return (60 - timeSpan.TotalSeconds).ToString();
+                }
+            }
+
+            return "";
         }
     }
 }
