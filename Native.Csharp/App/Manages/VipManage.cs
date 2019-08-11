@@ -93,6 +93,19 @@ namespace Native.Csharp.App.Manages
                 return;
             }
 
+
+            DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            DateTime endTime = Convert.ToDateTime(vip.endTime);
+
+            TimeSpan timeSpan = endTime.Subtract(nowTime);
+
+            int day = timeSpan.Days + 1;
+
+            if (day < 7)
+            {
+                Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user.Name + "] 您的会员即将到期，到期之后将不能享有会员服务，请及时购买会员!");
+            }
+
             string type = onHookType == 2 ? "金币" : "经验" ; 
 
             vip.OnHookTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
