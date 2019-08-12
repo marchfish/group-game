@@ -25,6 +25,14 @@ namespace Native.Csharp.App.Manages
 
             string[] arr = e.Message.Split(' ');
 
+            User user1 = GetUser(e.FromQQ.ToString(), e, groupPath);
+
+            if (arr[0] == "血量" || arr[0] == "生命") {
+
+                Common.CqApi.SendGroupMessage(e.FromGroup, "[" + user1.Name + "]" + Environment.NewLine + "血量：" + user1.HP.ToString() + Environment.NewLine + "蓝量：" + user1.MP.ToString() );
+                return ;
+            }
+
             if (arr[0] == "改名") {
                 if (arr.Length > 1)
                 {

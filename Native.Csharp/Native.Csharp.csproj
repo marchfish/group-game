@@ -157,6 +157,7 @@
     <Compile Include="App\Manages\AttackManage.cs" />
     <Compile Include="App\Manages\BaseManage.cs" />
     <Compile Include="App\Manages\BusinessManage.cs" />
+    <Compile Include="App\Manages\ChallengeManage.cs" />
     <Compile Include="App\Manages\EquipManage.cs" />
     <Compile Include="App\Manages\EventManage.cs" />
     <Compile Include="App\Manages\Facade.cs" />
