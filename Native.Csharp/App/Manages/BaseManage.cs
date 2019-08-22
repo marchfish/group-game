@@ -354,6 +354,23 @@ namespace Native.Csharp.App.Manages
             return true;
         }
 
+        // 判断时间是否超时
+        protected bool IsOutTime(string time, int selected, int num)
+        {
+            DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            DateTime lastTime = Convert.ToDateTime(time);
+
+            TimeSpan timeSpan = nowTime.Subtract(lastTime);
+
+            if (timeSpan.TotalSeconds < num)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         // 判断是否成功
         protected bool IsSuccess(int num)
         {

@@ -287,7 +287,18 @@ namespace Native.Csharp.App.Manages
 
                 if (!user.isShowMessage)
                 {
-                    Common.CqApi.SendGroupMessage(e.FromGroup, "获得：" + arr[0] + "*" + arr[1]);
+                    string lastTime = iniTool.IniReadValue(groupPath, dateTimeIni, e.FromQQ.ToString(), "掉落时间");
+
+                    if (lastTime != "")
+                    {
+                      user.isItemShowMessage = IsOutTime(lastTime, 1, 30);
+                    }
+
+                    if (user.isItemShowMessage) {
+                        Common.CqApi.SendGroupMessage(e.FromGroup, "获得：" + arr[0] + "*" + arr[1]);
+                    }
+
+                    iniTool.IniWriteValue(groupPath, dateTimeIni, e.FromQQ.ToString(), "掉落时间", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 }
 
                 return res;
