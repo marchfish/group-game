@@ -79,16 +79,16 @@ namespace Native.Csharp.App.Manages
             string userId = e.FromQQ.ToString();
 
             user.Agg += equip.Agg;
-            user.HP += equip.HP;
-            user.MP += equip.MP;
+            user.MaxHP += equip.HP;
+            user.MaxMP += equip.MP;
             user.Magic += equip.Magic;
             user.Dodge += equip.Dodge;
             user.Crit += equip.Crit;
             user.Defense += equip.Defense;
 
             iniTool.WriteInt(groupPath, userInfoIni, userId, "攻击力", user.Agg);
-            iniTool.WriteInt(groupPath, userInfoIni, userId, "血量", user.HP);
-            iniTool.WriteInt(groupPath, userInfoIni, userId, "蓝量", user.MP);
+            iniTool.WriteInt(groupPath, userInfoIni, userId, "最大血量", user.MaxHP);
+            iniTool.WriteInt(groupPath, userInfoIni, userId, "最大蓝量", user.MaxMP);
             iniTool.WriteInt(groupPath, userInfoIni, userId, "魔法力", user.Magic);
             iniTool.WriteInt(groupPath, userInfoIni, userId, "闪避率", user.Dodge);
             iniTool.WriteInt(groupPath, userInfoIni, userId, "暴击率", user.Crit);
@@ -99,16 +99,16 @@ namespace Native.Csharp.App.Manages
         public void UserDownEquip(User user, Equip equip, string groupPath, string userId)
         {
             user.Agg -= equip.Agg;
-            user.HP -= equip.HP;
-            user.MP -= equip.MP;
+            user.MaxHP -= equip.HP;
+            user.MaxMP -= equip.MP;
             user.Magic -= equip.Magic;
             user.Dodge -= equip.Dodge;
             user.Crit -= equip.Crit;
             user.Defense -= equip.Defense;
 
             iniTool.WriteInt(groupPath, userInfoIni, userId, "攻击力", user.Agg);
-            iniTool.WriteInt(groupPath, userInfoIni, userId, "血量", user.HP);
-            iniTool.WriteInt(groupPath, userInfoIni, userId, "蓝量", user.MP);
+            iniTool.WriteInt(groupPath, userInfoIni, userId, "最大血量", user.MaxHP);
+            iniTool.WriteInt(groupPath, userInfoIni, userId, "最大蓝量", user.MaxMP);
             iniTool.WriteInt(groupPath, userInfoIni, userId, "魔法力", user.Magic);
             iniTool.WriteInt(groupPath, userInfoIni, userId, "闪避率", user.Dodge);
             iniTool.WriteInt(groupPath, userInfoIni, userId, "暴击率", user.Crit);
