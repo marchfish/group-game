@@ -35,11 +35,9 @@ namespace Native.Csharp.App.Manages
             if (compNum > 0)
             {
 
-                //iniTool.IniWriteValue(groupPath, challengeManageInfoIni, "时间", "内容", DateTime.Now.ToString("yyyy-MM-dd"));
+                iniTool.IniWriteValue(groupPath, challengeInfoIni, "时间", "内容", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
-                //DeleteItemAll(groupPath);
-
-                //Common.CqApi.SendGroupMessage(e.FromGroup, "拍卖行更新，暂无物品上架");
+                Reward(e, groupPath);
 
                 return;
             }
@@ -54,19 +52,6 @@ namespace Native.Csharp.App.Manages
                 ShowReward(e, groupPath, startTime);
                 return;
             }
-
-            //if (arr.Length > 1)
-            //{
-
-            //    if (Int32.TryParse(arr[1], out int num))
-            //    {
-
-            //        ShowBusinessPage(user, e, groupPath, num);
-
-            //        return;
-            //    }
-
-            //}
 
             ShowRank(e, groupPath, startTime);
             return;
@@ -252,6 +237,38 @@ namespace Native.Csharp.App.Manages
             return;
         }
 
+        //发放奖励
+        private void Reward(CqGroupMessageEventArgs e, string groupPath)
+        {
+            string res = "[排位奖励]" + Environment.NewLine;
+
+            for (int i = 1; i <= 10; i++)
+            {
+                string name = iniTool.IniReadValue(groupPath, challengeInfoIni, "排名", i.ToString());
+
+                if (!name.Equals("无"))
+                {
+                    string[] arr = name.Split('|');
+
+                    string rewards = iniTool.IniReadValue(devPath, challengeIni, "奖励", i.ToString());
+                    string[] reward = rewards.Split('|');
+
+                    foreach (string rs in reward) {
+                        string[] r = rs.Split('*');
+                        SetKnapsackItemNum(r[0], int.Parse(r[1]), groupPath, arr[1]);
+                    }
+                    continue;
+                }
+            }
+
+            iniTool.DeleteAllSection(groupPath, challengeInfoIni);
+
+            NewRank(e, groupPath);
+
+            return;
+        }
+
+        // 新排位
         private void NewRank(CqGroupMessageEventArgs e, string groupPath) {
             DateTime nowTime = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
